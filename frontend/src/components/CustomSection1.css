@@ -1,0 +1,164 @@
+/* CustomSection1.css – Product image-card grid */
+.cs1 {
+  padding: clamp(4.8rem, 6vw, 8rem) 0 0;
+  background: #fff;
+}
+
+.cs1__container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Header */
+.cs1__header {
+  text-align: center;
+  margin-bottom: clamp(2.4rem, 4vw, 6rem);
+}
+
+.cs1__subheading {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6b7a6b;
+  margin: 0 0 0.8rem 0;
+  font-weight: 500;
+}
+
+.cs1__heading {
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  font-weight: 600;
+  color: #1a2e1a;
+  margin: 0 0 0.8rem 0;
+  line-height: 1.2;
+}
+
+.cs1__body {
+  font-size: 0.95rem;
+  color: #6b7a6b;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Grid */
+.cs1__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.8rem, 2vw, 3rem);
+}
+
+@media (max-width: 900px) {
+  .cs1__grid { grid-template-columns: 1fr; }
+}
+
+/* Card */
+.cs1__card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  aspect-ratio: 0.867;
+  background: #2d4a38;
+}
+
+.cs1__card-picture {
+  position: absolute;
+  inset: 0;
+}
+
+.cs1__card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.cs1__card:hover .cs1__card-img {
+  transform: scale(1.04);
+}
+
+.cs1__card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+  transition: background 0.3s;
+}
+
+.cs1__card:hover .cs1__card-overlay {
+  background: rgba(0,0,0,0.28);
+}
+
+/* Product badge — bottom right */
+.cs1__card-badge {
+  position: absolute;
+  bottom: 1.2rem;
+  right: 1.2rem;
+  width: clamp(5rem, 8vw, 7rem);
+  height: clamp(5rem, 8vw, 7rem);
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(8px);
+}
+
+.cs1__card-badge-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Card content — top left */
+.cs1__card-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.cs1__card-tag {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  align-self: flex-start;
+}
+
+.cs1__card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 400;
+  color: #fff;
+  margin: 0;
+  line-height: 1.25;
+  max-width: 16ch;
+}
+
+.cs1__card-btn {
+  display: inline-block;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: #fff;
+  padding: 0.55rem 1.4rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  align-self: flex-start;
+  transition: background 0.18s, border-color 0.18s;
+  margin-top: 0.4rem;
+}
+
+.cs1__card-btn:hover {
+  background: rgba(201, 232, 107, 0.3);
+  border-color: #c9e86b;
+}

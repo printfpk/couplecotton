@@ -1,0 +1,1861 @@
+/* Fonts are loaded via Google Fonts in index.html:
+   - Inter (400/500/700) replaces Geist for body/nav/buttons
+   - Instrument Serif (400 normal+italic) for headings
+*/
+
+:root {
+  /* Page layout */
+  --page-width: 144.0rem;
+  --page-width-narrow: 88.0rem;
+
+  --logo-width: 105px;
+  --logo-width-mobile: 90px;
+  --logo-width-menu-drawer: 90px;
+
+  /* Typography presets */
+  --font-size--mega-title: clamp(4.032rem,
+      calc(3.368vw + 1.448rem),
+      5.76rem);
+  --font-size--h1: clamp(3.36rem,
+      calc(2.807vw + 1.207rem),
+      4.8rem);
+  --font-size--h2: clamp(2.688rem,
+      calc(2.246vw + 0.966rem),
+      3.84rem);
+  --font-size--h3: clamp(2.352rem,
+      calc(1.965vw + 0.845rem),
+      3.36rem);
+  --font-size--h4: clamp(1.92rem,
+      calc(1.404vw + 0.844rem),
+      2.64rem);
+  --font-size--h5: clamp(1.92rem,
+      calc(0.468vw + 1.561rem),
+      2.16rem);
+  --font-size--h6: clamp(1.92rem,
+      calc(0.0vw + 1.92rem),
+      1.92rem);
+  --font-size--paragraph: 1.5rem;
+  --font-size--paragraph-small: 1.35rem;
+  --font-paragraph--weight: 400;
+  --font-paragraph--size: var(--font-size--paragraph);
+  --font-paragraph--family: var(--font-body--family);
+  --font-paragraph--style: var(--font-body--style);
+  --font-h1--weight: var(--font-heading--weight);
+  --font-h1--size: var(--font-size--h1);
+  --font-h1--family: var(--font-heading--family);
+  --font-h1--style: var(--font-heading--style);
+  --font-h2--weight: var(--font-heading--weight);
+  --font-h2--size: var(--font-size--h2);
+  --font-h2--family: var(--font-heading--family);
+  --font-h2--style: var(--font-heading--style);
+  --font-h3--weight: var(--font-heading--weight);
+  --font-h3--size: var(--font-size--h3);
+  --font-h3--family: var(--font-heading--family);
+  --font-h3--style: var(--font-heading--style);
+  --font-h4--weight: var(--font-heading--weight);
+  --font-h4--size: var(--font-size--h4);
+  --font-h4--family: var(--font-heading--family);
+  --font-h4--style: var(--font-heading--style);
+  --font-h5--weight: var(--font-heading--weight);
+  --font-h5--size: var(--font-size--h5);
+  --font-h5--family: var(--font-heading--family);
+  --font-h5--style: var(--font-heading--style);
+  --font-h6--weight: var(--font-heading--weight);
+  --font-h6--size: var(--font-size--h6);
+  --font-h6--family: var(--font-heading--family);
+  --font-h6--style: var(--font-heading--style);
+  /* Line heights */
+  --font-mega-title--line-height: 1.2;
+  --font-h1--line-height: 1.2;
+  --font-h2--line-height: 1.3125;
+  --font-h3--line-height: 1.357;
+  --font-h4--line-height: 1.454;
+  --font-h5--line-height: 1.555;
+  --font-h6--line-height: 1.625;
+  --font-paragraph--line-height: 1.6;
+
+  --line-height--display-tight: 1;
+  --line-height--display-normal: 1.1;
+  --line-height--display-loose: 1.2;
+
+  --line-height--heading-tight: 1.2;
+  --line-height--heading-normal: 1.357;
+  --line-height--heading-loose: 1.625;
+
+  --line-height--subheading-tight: 1.2;
+  --line-height--subheading-normal: 1.357;
+  --line-height--subheading-loose: 1.625;
+
+  --line-height--body-tight: 1.2;
+  --line-height--body-normal: 1.4;
+  --line-height--body-loose: 1.6;
+
+  /* Spacing */
+  --spacing-scale-sm: 0.6;
+  --spacing-scale-md: 0.7;
+  --spacing-scale-default: 1.0;
+  --font-heading--spacing: clamp(2.4rem, .8em, 6rem);
+  --font-paragraph--spacing: clamp(2.4rem, .8em, 6rem);
+
+
+  /* Animations */
+  --animation-duration--fast: 0.25s;
+  --animation-duration--medium: 0.35s;
+  --animation-duration--slow: 0.5s;
+  --animation-duration--long: 0.6s;
+  --animation-easing: ease-in-out;
+  --animation-easing--smooth: cubic-bezier(0.3, 1, 0.3, 1);
+  --fixed-overlay-easing: cubic-bezier(0.7, 0, 0.2, 1);
+  --transform-origin-start: left;
+  --transform-origin-end: right;
+
+  /* Font families — loaded from Google Fonts (Inter + Instrument Serif) */
+  --font-body--family: Inter, sans-serif;
+  --font-body--style: normal;
+  --font-body--weight: 400;
+  --font-subheading--family: Inter, sans-serif;
+  --font-subheading--style: normal;
+  --font-subheading--weight: 500;
+  --font-subheading--transform: uppercase;
+  --font-subheading--letter-spacing: 0.05em;
+  --font-subheading--size-scale: 1.0;
+  --font-subheading--size: 1.5rem;
+  --font-pcard-title--family: Inter, sans-serif;
+  --font-pcard-title--style: normal;
+  --font-pcard-title--weight: 500;
+  --font-pcard-title--size-scale: 1.0;
+  --font-pcard-title--size: 1.5rem;
+  --font-pcard-price--family: Inter, sans-serif;
+  --font-pcard-price--style: normal;
+  --font-pcard-price--weight: 400;
+  --font-pcard-badge--family: Inter, sans-serif;
+  --font-pcard-badge--style: normal;
+  --font-pcard-badge--weight: 500;
+  --font-pcard-badge--transform: capitalize;
+  --font-pcard-badge--letter-spacing: 0.0em;
+  --font-navigation--family: Inter, sans-serif;
+  --font-navigation--style: normal;
+  --font-navigation--weight: 500;
+  --font-navigation--transform: capitalize;
+  --font-navigation--letter-spacing: 0.0em;
+  --font-button--family: Inter, sans-serif;
+  --font-button--style: normal;
+  --font-button--weight: 500;
+
+  --font-heading--family: "Instrument Serif", serif;
+  --font-heading--style: normal;
+  --font-heading--weight: 400;
+
+  --font-highlight--family: "Instrument Serif", serif;
+  --font-highlight--style: normal;
+  --font-highlight--weight: 400;
+
+  /* Buttons */
+  --font-button--transform: capitalize;
+  --font-button--letter-spacing: 0.0em;
+
+  /* Inputs */
+  --select-arrow-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --input-border-radius: 6.0rem;
+  --input-height: 5.0rem;
+  --input-border-width: 0.1rem;
+  --textareas-radius: min(6.0rem, 1rem);
+  /* Buttons */
+  --button-height: 5.0rem;
+  --button-corner-radius: 6.0rem;
+  --button-border-thickness: 0.1rem;
+
+  /* Z-index */
+  --layer-section-background: -2;
+  --layer-lowest: -1;
+  --layer-base: 0;
+  --layer-flat: 1;
+  --layer-raised: 2;
+  --layer-heightened: 4;
+  --layer-sticky: 8;
+  --layer-window-overlay: 10;
+  --layer-header-menu: 12;
+  --layer-overlay: 16;
+  --layer-menu-drawer: 18;
+  --layer-temporary: 20;
+
+  /* Badges */
+  --color-new-badge-background: 95 177 173;
+  --color-new-badge-text: 255 255 255;
+  --color-hot-badge-background: 115 146 113;
+  --color-hot-badge-text: 255 255 255;
+  --color-popular-badge-background: 144 141 203;
+  --color-popular-badge-text: 255 255 255;
+  --color-sale-badge-background: 196 48 28;
+  --color-sale-badge-text: 255 255 255;
+  --color-sold-out-badge-background: 167 167 167;
+  --color-sold-out-badge-text: 255 255 255;
+  --color-cart-bubble-text: #000000;
+  --color-cart-bubble-background: #e3f6a4;
+  --badge-corner-radius: 6.0rem;
+
+  /* Hardcoded Color */
+  --color-white: 255 255 255;
+  --color-black: 0 0 0;
+  --color-focus-ring: 27 87 192;
+
+  /* Product card */
+  --product-card-media-radius: 2.0rem;
+
+  /* Dialog */
+  --dialog-radius: 2.0rem;
+  --dialog-backdrop-opacity: 60%;
+}
+
+
+:root,
+.color-scheme-1 {
+  --color-background: 255 255 255;
+  --color-background-secondary: 238 238 238;
+  --color-foreground: 0 0 0;
+  --color-foreground-secondary: rgba(0 0 0 / 0.7);
+  --color-border: 0 0 0;
+  --color-border-alpha: 0.1;
+  --color-sale-price: 196 48 28;
+  --color-primary-button-background: 227 246 164;
+  --color-primary-button-text: 0 0 0;
+  --color-primary-button-border: ;
+  --color-secondary-button-background: 235 235 235;
+  --color-secondary-button-text: 0 0 0;
+  --color-secondary-button-border: 235 235 235;
+  --color-input-background: 238 238 238;
+  --color-input-text: 0 0 0;
+
+  --color-input-focus-text: 0 0 0;
+  --color-swatch-border: rgb(227 227 227);
+  --color-notification-success: 10 155 97;
+  --color-notification-error: 196 48 28;
+  --color-notification-warning: 255 193 7;
+  --color-notification-info: 0 123 255;
+  --color-notification-out-of-stock: 114 114 114;
+  --color-progress-bar: 60 142 55;
+  --input-border-color: rgb(238 238 238);
+}
+
+
+.color-scheme-inverse {
+  --color-background: 0 0 0;
+  --color-background-secondary: 33 33 33;
+  --color-foreground: 255 255 255;
+  --color-foreground-secondary: rgba(255 255 255 / 0.7);
+  --color-border: 255 255 255;
+  --color-border-alpha: 0.7;
+  --color-sale-price: 196 48 28;
+  --color-primary-button-background: 255 255 255;
+  --color-primary-button-text: 0 0 0;
+  --color-primary-button-border: ;
+  --color-secondary-button-background: 47 47 47;
+  --color-secondary-button-text: 255 255 255;
+  --color-secondary-button-border: 47 47 47;
+  --color-input-background: 255 255 255;
+  --color-input-text: 0 0 0;
+
+  --color-input-focus-text: 255 255 255;
+  --color-swatch-border: rgb(47 47 47);
+  --color-notification-success: 10 155 97;
+  --color-notification-error: 196 48 28;
+  --color-notification-warning: 255 193 7;
+  --color-notification-info: 0 123 255;
+  --color-notification-out-of-stock: 114 114 114;
+  --color-progress-bar: 255 255 255;
+  --input-border-color: rgb(255 255 255);
+}
+
+
+.color-scheme-2 {
+  --color-background: 11 42 27;
+  --color-background-secondary: 255 255 255;
+  --color-foreground: 255 255 255;
+  --color-foreground-secondary: rgba(255 255 255 / 0.7);
+  --color-border: 255 255 255;
+  --color-border-alpha: 0.1;
+  --color-sale-price: 196 48 28;
+  --color-primary-button-background: 227 246 164;
+  --color-primary-button-text: 0 0 0;
+  --color-primary-button-border: ;
+  --color-secondary-button-background: 25 64 45;
+  --color-secondary-button-text: 255 255 255;
+  --color-secondary-button-border: 25 64 45;
+  --color-input-background: 238 238 238;
+  --color-input-text: 0 0 0;
+
+  --color-input-focus-text: 255 255 255;
+  --color-swatch-border: rgb(227 227 227);
+  --color-notification-success: 10 155 97;
+  --color-notification-error: 196 48 28;
+  --color-notification-warning: 255 193 7;
+  --color-notification-info: 0 123 255;
+  --color-notification-out-of-stock: 114 114 114;
+  --color-progress-bar: 4 155 110;
+  --input-border-color: rgb(238 238 238);
+}
+
+
+.color-scheme-3 {
+  --color-background: 188 216 203;
+  --color-background-secondary: 255 255 255;
+  --color-foreground: 0 0 0;
+  --color-foreground-secondary: rgba(0 0 0 / 0.7);
+  --color-border: 0 0 0;
+  --color-border-alpha: 0.15;
+  --color-sale-price: 196 48 28;
+  --color-primary-button-background: 255 255 255;
+  --color-primary-button-text: 0 0 0;
+  --color-primary-button-border: ;
+  --color-secondary-button-background: 0 0 0;
+  --color-secondary-button-text: 255 255 255;
+  --color-secondary-button-border: 0 0 0;
+  --color-input-background: 255 255 255;
+  --color-input-text: 0 0 0;
+
+  --color-input-focus-background: 255 255 255 / 1.0;
+
+  --color-input-focus-text: 0 0 0;
+  --color-swatch-border: rgb(227 227 227);
+  --color-notification-success: 10 155 97;
+  --color-notification-error: 196 48 28;
+  --color-notification-warning: 255 193 7;
+  --color-notification-info: 0 123 255;
+  --color-notification-out-of-stock: 114 114 114;
+  --color-progress-bar: 4 155 110;
+  --input-border-color: rgb(255 255 255);
+}
+
+
+.color-scheme-4 {
+  --color-background: 233 238 216;
+  --color-background-secondary: 255 255 255;
+  --color-foreground: 0 0 0;
+  --color-foreground-secondary: rgba(0 0 0 / 0.7);
+  --color-border: 0 0 0;
+  --color-border-alpha: 0.15;
+  --color-sale-price: 196 48 28;
+  --color-primary-button-background: 255 255 255;
+  --color-primary-button-text: 0 0 0;
+  --color-primary-button-border: ;
+  --color-secondary-button-background: 235 235 235;
+  --color-secondary-button-text: 0 0 0;
+  --color-secondary-button-border: 0 0 0;
+  --color-input-background: 238 238 238;
+  --color-input-text: 0 0 0;
+
+  --color-input-focus-text: 0 0 0;
+  --color-swatch-border: rgb(227 227 227);
+  --color-notification-success: 10 155 97;
+  --color-notification-error: 196 48 28;
+  --color-notification-warning: 255 193 7;
+  --color-notification-info: 0 123 255;
+  --color-notification-out-of-stock: 114 114 114;
+  --color-progress-bar: 4 155 110;
+  --input-border-color: rgb(238 238 238);
+}
+
+
+.color-scheme-5 {
+  --color-background: 245 245 245;
+  --color-background-secondary: 255 255 255;
+  --color-foreground: 0 0 0;
+  --color-foreground-secondary: rgba(0 0 0 / 0.7);
+  --color-border: 0 0 0;
+  --color-border-alpha: 0.1;
+  --color-sale-price: 196 48 28;
+  --color-primary-button-background: 0 0 0;
+  --color-primary-button-text: 255 255 255;
+  --color-primary-button-border: ;
+  --color-secondary-button-background: 235 235 235;
+  --color-secondary-button-text: 0 0 0;
+  --color-secondary-button-border: 235 235 235;
+  --color-input-background: 255 255 255;
+  --color-input-text: 0 0 0;
+
+  --color-input-focus-text: 0 0 0;
+  --color-swatch-border: rgb(227 227 227);
+  --color-notification-success: 10 155 97;
+  --color-notification-error: 196 48 28;
+  --color-notification-warning: 255 193 7;
+  --color-notification-info: 0 123 255;
+  --color-notification-out-of-stock: 114 114 114;
+  --color-progress-bar: 4 155 110;
+  --input-border-color: rgb(255 255 255);
+}
+
+
+.color-scheme-6 {
+  --color-background: 227 246 164;
+  --color-background-secondary: 238 238 238;
+  --color-foreground: 0 0 0;
+  --color-foreground-secondary: rgba(0 0 0 / 0.7);
+  --color-border: 0 0 0;
+  --color-border-alpha: 0.1;
+  --color-sale-price: 196 48 28;
+  --color-primary-button-background: 0 0 0;
+  --color-primary-button-text: 255 255 255;
+  --color-primary-button-border: ;
+  --color-secondary-button-background: 235 235 235;
+  --color-secondary-button-text: 0 0 0;
+  --color-secondary-button-border: 235 235 235;
+  --color-input-background: 238 238 238;
+  --color-input-text: 0 0 0;
+
+  --color-input-focus-text: 0 0 0;
+  --color-swatch-border: rgb(227 227 227);
+  --color-notification-success: 10 155 97;
+  --color-notification-error: 196 48 28;
+  --color-notification-warning: 255 193 7;
+  --color-notification-info: 0 123 255;
+  --color-notification-out-of-stock: 114 114 114;
+  --color-progress-bar: 4 155 110;
+  --input-border-color: rgb(238 238 238);
+}
+
+
+.color-scheme-7 {
+  --color-background: 255 255 255;
+  --color-background-secondary: 244 244 244;
+  --color-foreground: 0 0 0;
+  --color-foreground-secondary: rgba(0 0 0 / 0.7);
+  --color-border: 0 0 0;
+  --color-border-alpha: 0.1;
+  --color-sale-price: 196 48 28;
+  --color-primary-button-background: 0 0 0;
+  --color-primary-button-text: 255 255 255;
+  --color-primary-button-border: ;
+  --color-secondary-button-background: 235 235 235;
+  --color-secondary-button-text: 0 0 0;
+  --color-secondary-button-border: 235 235 235;
+  --color-input-background: 238 238 238;
+  --color-input-text: 0 0 0;
+
+  --color-input-focus-text: 0 0 0;
+  --color-swatch-border: rgb(227 227 227);
+  --color-notification-success: 10 155 97;
+  --color-notification-error: 196 48 28;
+  --color-notification-warning: 255 193 7;
+  --color-notification-info: 0 123 255;
+  --color-notification-out-of-stock: 114 114 114;
+  --color-progress-bar: 60 142 55;
+  --input-border-color: rgb(238 238 238);
+}
+
+
+.color-scheme-8 {
+  --color-background: 217 237 228;
+  --color-background-secondary: 255 255 255;
+  --color-foreground: 0 0 0;
+  --color-foreground-secondary: rgba(0 0 0 / 0.7);
+  --color-border: 0 0 0;
+  --color-border-alpha: 0.1;
+  --color-sale-price: 196 48 28;
+  --color-primary-button-background: 0 0 0;
+  --color-primary-button-text: 255 255 255;
+  --color-primary-button-border: ;
+  --color-secondary-button-background: 255 255 255;
+  --color-secondary-button-text: 0 0 0;
+  --color-secondary-button-border: 255 255 255;
+  --color-input-background: 238 238 238;
+  --color-input-text: 0 0 0;
+
+  --color-input-focus-text: 0 0 0;
+  --color-swatch-border: rgb(227 227 227);
+  --color-notification-success: 10 155 97;
+  --color-notification-error: 196 48 28;
+  --color-notification-warning: 255 193 7;
+  --color-notification-info: 0 123 255;
+  --color-notification-out-of-stock: 114 114 114;
+  --color-progress-bar: 60 142 55;
+  --input-border-color: rgb(238 238 238);
+}
+
+
+.color-scheme-9 {
+  --color-background: 249 234 232;
+  --color-background-secondary: 238 238 238;
+  --color-foreground: 196 48 28;
+  --color-foreground-secondary: rgba(196 48 28 / 0.7);
+  --color-border: 0 0 0;
+  --color-border-alpha: 0.1;
+  --color-sale-price: 196 48 28;
+  --color-primary-button-background: 227 246 164;
+  --color-primary-button-text: 0 0 0;
+  --color-primary-button-border: ;
+  --color-secondary-button-background: 235 235 235;
+  --color-secondary-button-text: 0 0 0;
+  --color-secondary-button-border: 235 235 235;
+  --color-input-background: 238 238 238;
+  --color-input-text: 0 0 0;
+
+  --color-input-focus-text: 196 48 28;
+  --color-swatch-border: rgb(227 227 227);
+  --color-notification-success: 10 155 97;
+  --color-notification-error: 196 48 28;
+  --color-notification-warning: 255 193 7;
+  --color-notification-info: 0 123 255;
+  --color-notification-out-of-stock: 114 114 114;
+  --color-progress-bar: 60 142 55;
+  --input-border-color: rgb(238 238 238);
+}
+
+
+.color-scheme-10 {
+  --color-background: 243 243 243;
+  --color-background-secondary: 255 255 255;
+  --color-foreground: 0 0 0;
+  --color-foreground-secondary: rgba(0 0 0 / 0.7);
+  --color-border: 0 0 0;
+  --color-border-alpha: 0.1;
+  --color-sale-price: 196 48 28;
+  --color-primary-button-background: 0 0 0;
+  --color-primary-button-text: 255 255 255;
+  --color-primary-button-border: ;
+  --color-secondary-button-background: 235 235 235;
+  --color-secondary-button-text: 0 0 0;
+  --color-secondary-button-border: 235 235 235;
+  --color-input-background: 255 255 255;
+  --color-input-text: 0 0 0;
+
+  --color-input-focus-text: 0 0 0;
+  --color-swatch-border: rgb(227 227 227);
+  --color-notification-success: 10 155 97;
+  --color-notification-error: 196 48 28;
+  --color-notification-warning: 255 193 7;
+  --color-notification-info: 0 123 255;
+  --color-notification-out-of-stock: 114 114 114;
+  --color-progress-bar: 4 155 110;
+  --input-border-color: rgb(255 255 255);
+}
+
+
+.color-scheme-11 {
+  --color-background: 241 241 241;
+  --color-background-secondary: 255 255 255;
+  --color-foreground: 0 0 0;
+  --color-foreground-secondary: rgba(0 0 0 / 0.7);
+  --color-border: 0 0 0;
+  --color-border-alpha: 0.1;
+  --color-sale-price: 196 48 28;
+  --color-primary-button-background: 0 0 0;
+  --color-primary-button-text: 255 255 255;
+  --color-primary-button-border: ;
+  --color-secondary-button-background: 235 235 235;
+  --color-secondary-button-text: 0 0 0;
+  --color-secondary-button-border: 235 235 235;
+  --color-input-background: 255 255 255;
+  --color-input-text: 0 0 0;
+
+  --color-input-focus-text: 0 0 0;
+  --color-swatch-border: rgb(227 227 227);
+  --color-notification-success: 10 155 97;
+  --color-notification-error: 196 48 28;
+  --color-notification-warning: 255 193 7;
+  --color-notification-info: 0 123 255;
+  --color-notification-out-of-stock: 114 114 114;
+  --color-progress-bar: 4 155 110;
+  --input-border-color: rgb(255 255 255);
+}
+
+
+.color-scheme-12 {
+  --color-background: 240 240 240;
+  --color-background-secondary: 255 255 255;
+  --color-foreground: 0 0 0;
+  --color-foreground-secondary: rgba(0 0 0 / 0.7);
+  --color-border: 0 0 0;
+  --color-border-alpha: 0.1;
+  --color-sale-price: 196 48 28;
+  --color-primary-button-background: 0 0 0;
+  --color-primary-button-text: 255 255 255;
+  --color-primary-button-border: ;
+  --color-secondary-button-background: 235 235 235;
+  --color-secondary-button-text: 0 0 0;
+  --color-secondary-button-border: 235 235 235;
+  --color-input-background: 255 255 255;
+  --color-input-text: 0 0 0;
+
+  --color-input-focus-text: 0 0 0;
+  --color-swatch-border: rgb(227 227 227);
+  --color-notification-success: 10 155 97;
+  --color-notification-error: 196 48 28;
+  --color-notification-warning: 255 193 7;
+  --color-notification-info: 0 123 255;
+  --color-notification-out-of-stock: 114 114 114;
+  --color-progress-bar: 4 155 110;
+  --input-border-color: rgb(255 255 255);
+}
+
+
+body,
+.inherit-color-scheme,
+.color-scheme-1,
+.color-scheme-inverse,
+.color-scheme-2,
+.color-scheme-3,
+.color-scheme-4,
+.color-scheme-5,
+.color-scheme-6,
+.color-scheme-7,
+.color-scheme-8,
+.color-scheme-9,
+.color-scheme-10,
+.color-scheme-11,
+.color-scheme-12 {
+  color: rgb(var(--color-foreground));
+  background-color: rgb(var(--color-background));
+}
+
+@media (min-width: 767.98px) {
+  .desktop-color-scheme-1 {
+    --color-background: 255 255 255;
+    --color-background-secondary: 238 238 238;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 227 246 164;
+    --color-primary-button-text: 0 0 0;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 60 142 55;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .desktop-color-scheme-inverse {
+    --color-background: 0 0 0;
+    --color-background-secondary: 33 33 33;
+    --color-foreground: 255 255 255;
+    --color-foreground-secondary: rgba(255 255 255 / 0.7);
+    --color-border: 255 255 255;
+    --color-border-alpha: 0.7;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 255 255 255;
+    --color-primary-button-text: 0 0 0;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 47 47 47;
+    --color-secondary-button-text: 255 255 255;
+    --color-secondary-button-border: 47 47 47;
+    --color-input-background: 255 255 255;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 255 255 255;
+    --color-swatch-border: rgb(47 47 47);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 255 255 255;
+    --input-border-color: rgb(255 255 255);
+  }
+
+  .desktop-color-scheme-2 {
+    --color-background: 11 42 27;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 255 255 255;
+    --color-foreground-secondary: rgba(255 255 255 / 0.7);
+    --color-border: 255 255 255;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 227 246 164;
+    --color-primary-button-text: 0 0 0;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 25 64 45;
+    --color-secondary-button-text: 255 255 255;
+    --color-secondary-button-border: 25 64 45;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 255 255 255;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .desktop-color-scheme-3 {
+    --color-background: 188 216 203;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.15;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 255 255 255;
+    --color-primary-button-text: 0 0 0;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 0 0 0;
+    --color-secondary-button-text: 255 255 255;
+    --color-secondary-button-border: 0 0 0;
+    --color-input-background: 255 255 255;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-background: 255 255 255 / 1.0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(255 255 255);
+  }
+
+  .desktop-color-scheme-4 {
+    --color-background: 233 238 216;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.15;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 255 255 255;
+    --color-primary-button-text: 0 0 0;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 0 0 0;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .desktop-color-scheme-5 {
+    --color-background: 245 245 245;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 255 255 255;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(255 255 255);
+  }
+
+  .desktop-color-scheme-6 {
+    --color-background: 227 246 164;
+    --color-background-secondary: 238 238 238;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .desktop-color-scheme-7 {
+    --color-background: 255 255 255;
+    --color-background-secondary: 244 244 244;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 60 142 55;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .desktop-color-scheme-8 {
+    --color-background: 217 237 228;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 255 255 255;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 255 255 255;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 60 142 55;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .desktop-color-scheme-9 {
+    --color-background: 249 234 232;
+    --color-background-secondary: 238 238 238;
+    --color-foreground: 196 48 28;
+    --color-foreground-secondary: rgba(196 48 28 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 227 246 164;
+    --color-primary-button-text: 0 0 0;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 196 48 28;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 60 142 55;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .desktop-color-scheme-10 {
+    --color-background: 243 243 243;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 255 255 255;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(255 255 255);
+  }
+
+  .desktop-color-scheme-11 {
+    --color-background: 241 241 241;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 255 255 255;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(255 255 255);
+  }
+
+  .desktop-color-scheme-12 {
+    --color-background: 240 240 240;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 255 255 255;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(255 255 255);
+  }
+
+  .desktop-color-scheme-1,
+  .desktop-color-scheme-inverse,
+  .desktop-color-scheme-2,
+  .desktop-color-scheme-3,
+  .desktop-color-scheme-4,
+  .desktop-color-scheme-5,
+  .desktop-color-scheme-6,
+  .desktop-color-scheme-7,
+  .desktop-color-scheme-8,
+  .desktop-color-scheme-9,
+  .desktop-color-scheme-10,
+  .desktop-color-scheme-11,
+  .desktop-color-scheme-12 {
+    color: rgb(var(--color-foreground));
+    background-color: rgb(var(--color-background));
+  }
+}
+
+@media (max-width: 767px) {
+  .mobile-color-scheme-1 {
+    --color-background: 255 255 255;
+    --color-background-secondary: 238 238 238;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 227 246 164;
+    --color-primary-button-text: 0 0 0;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 60 142 55;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .mobile-color-scheme-inverse {
+    --color-background: 0 0 0;
+    --color-background-secondary: 33 33 33;
+    --color-foreground: 255 255 255;
+    --color-foreground-secondary: rgba(255 255 255 / 0.7);
+    --color-border: 255 255 255;
+    --color-border-alpha: 0.7;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 255 255 255;
+    --color-primary-button-text: 0 0 0;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 47 47 47;
+    --color-secondary-button-text: 255 255 255;
+    --color-secondary-button-border: 47 47 47;
+    --color-input-background: 255 255 255;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 255 255 255;
+    --color-swatch-border: rgb(47 47 47);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 255 255 255;
+    --input-border-color: rgb(255 255 255);
+  }
+
+  .mobile-color-scheme-2 {
+    --color-background: 11 42 27;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 255 255 255;
+    --color-foreground-secondary: rgba(255 255 255 / 0.7);
+    --color-border: 255 255 255;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 227 246 164;
+    --color-primary-button-text: 0 0 0;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 25 64 45;
+    --color-secondary-button-text: 255 255 255;
+    --color-secondary-button-border: 25 64 45;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 255 255 255;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .mobile-color-scheme-3 {
+    --color-background: 188 216 203;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.15;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 255 255 255;
+    --color-primary-button-text: 0 0 0;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 0 0 0;
+    --color-secondary-button-text: 255 255 255;
+    --color-secondary-button-border: 0 0 0;
+    --color-input-background: 255 255 255;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-background: 255 255 255 / 1.0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(255 255 255);
+  }
+
+  .mobile-color-scheme-4 {
+    --color-background: 233 238 216;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.15;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 255 255 255;
+    --color-primary-button-text: 0 0 0;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 0 0 0;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .mobile-color-scheme-5 {
+    --color-background: 245 245 245;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 255 255 255;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(255 255 255);
+  }
+
+  .mobile-color-scheme-6 {
+    --color-background: 227 246 164;
+    --color-background-secondary: 238 238 238;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .mobile-color-scheme-7 {
+    --color-background: 255 255 255;
+    --color-background-secondary: 244 244 244;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 60 142 55;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .mobile-color-scheme-8 {
+    --color-background: 217 237 228;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 255 255 255;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 255 255 255;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 60 142 55;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .mobile-color-scheme-9 {
+    --color-background: 249 234 232;
+    --color-background-secondary: 238 238 238;
+    --color-foreground: 196 48 28;
+    --color-foreground-secondary: rgba(196 48 28 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 227 246 164;
+    --color-primary-button-text: 0 0 0;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 238 238 238;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 196 48 28;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 60 142 55;
+    --input-border-color: rgb(238 238 238);
+  }
+
+  .mobile-color-scheme-10 {
+    --color-background: 243 243 243;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 255 255 255;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(255 255 255);
+  }
+
+  .mobile-color-scheme-11 {
+    --color-background: 241 241 241;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 255 255 255;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(255 255 255);
+  }
+
+  .mobile-color-scheme-12 {
+    --color-background: 240 240 240;
+    --color-background-secondary: 255 255 255;
+    --color-foreground: 0 0 0;
+    --color-foreground-secondary: rgba(0 0 0 / 0.7);
+    --color-border: 0 0 0;
+    --color-border-alpha: 0.1;
+    --color-sale-price: 196 48 28;
+    --color-primary-button-background: 0 0 0;
+    --color-primary-button-text: 255 255 255;
+    --color-primary-button-border: ;
+    --color-secondary-button-background: 235 235 235;
+    --color-secondary-button-text: 0 0 0;
+    --color-secondary-button-border: 235 235 235;
+    --color-input-background: 255 255 255;
+    --color-input-text: 0 0 0;
+
+    --color-input-focus-text: 0 0 0;
+    --color-swatch-border: rgb(227 227 227);
+    --color-notification-success: 10 155 97;
+    --color-notification-error: 196 48 28;
+    --color-notification-warning: 255 193 7;
+    --color-notification-info: 0 123 255;
+    --color-notification-out-of-stock: 114 114 114;
+    --color-progress-bar: 4 155 110;
+    --input-border-color: rgb(255 255 255);
+  }
+
+  .mobile-color-scheme-1,
+  .mobile-color-scheme-inverse,
+  .mobile-color-scheme-2,
+  .mobile-color-scheme-3,
+  .mobile-color-scheme-4,
+  .mobile-color-scheme-5,
+  .mobile-color-scheme-6,
+  .mobile-color-scheme-7,
+  .mobile-color-scheme-8,
+  .mobile-color-scheme-9,
+  .mobile-color-scheme-10,
+  .mobile-color-scheme-11,
+  .mobile-color-scheme-12 {
+    color: rgb(var(--color-foreground));
+    background-color: rgb(var(--color-background));
+  }
+}
+
+:root {
+  --swiper-theme-color: #007aff;
+}
+
+:host {
+  position: relative;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 1;
+}
+
+.swiper {
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+  z-index: 1;
+  display: block;
+}
+
+.swiper-vertical>.swiper-wrapper {
+  flex-direction: column;
+}
+
+.swiper-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  transition-property: transform;
+  transition-timing-function: var(--swiper-wrapper-transition-timing-function, initial);
+  box-sizing: content-box;
+}
+
+.swiper-android .swiper-slide,
+.swiper-ios .swiper-slide,
+.swiper-wrapper {
+  transform: translateZ(0);
+}
+
+.swiper-horizontal {
+  touch-action: pan-y;
+}
+
+.swiper-vertical {
+  touch-action: pan-x;
+}
+
+.swiper-slide {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition-property: transform;
+  display: block;
+}
+
+.swiper-slide-invisible-blank {
+  visibility: hidden;
+}
+
+.swiper-initialized.swiper-equal-height .swiper-slide,
+.swiper-autoheight,
+.swiper-autoheight .swiper-slide {
+  height: auto;
+}
+
+.swiper-autoheight .swiper-wrapper {
+  align-items: flex-start;
+  transition-property: transform, height;
+}
+
+.swiper-backface-hidden .swiper-slide {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.swiper-3d.swiper-css-mode .swiper-wrapper {
+  perspective: 1200px;
+}
+
+.swiper-3d .swiper-wrapper {
+  transform-style: preserve-3d;
+}
+
+.swiper-3d {
+  perspective: 1200px;
+}
+
+.swiper-3d .swiper-slide,
+.swiper-3d .swiper-cube-shadow {
+  transform-style: preserve-3d;
+}
+
+.swiper-css-mode>.swiper-wrapper {
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.swiper-css-mode>.swiper-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.swiper-css-mode>.swiper-wrapper>.swiper-slide {
+  scroll-snap-align: start start;
+}
+
+.swiper-css-mode.swiper-horizontal>.swiper-wrapper {
+  scroll-snap-type: x mandatory;
+}
+
+.swiper-css-mode.swiper-vertical>.swiper-wrapper {
+  scroll-snap-type: y mandatory;
+}
+
+.swiper-css-mode.swiper-free-mode>.swiper-wrapper {
+  scroll-snap-type: none;
+}
+
+.swiper-css-mode.swiper-free-mode>.swiper-wrapper>.swiper-slide {
+  scroll-snap-align: none;
+}
+
+.swiper-css-mode.swiper-centered>.swiper-wrapper::before {
+  content: '';
+  flex-shrink: 0;
+  order: 9999;
+}
+
+.swiper-css-mode.swiper-centered>.swiper-wrapper>.swiper-slide {
+  scroll-snap-align: center center;
+  scroll-snap-stop: always;
+}
+
+.swiper-css-mode.swiper-centered.swiper-horizontal>.swiper-wrapper>.swiper-slide:first-child {
+  margin-inline-start: var(--swiper-centered-offset-before);
+}
+
+.swiper-css-mode.swiper-centered.swiper-horizontal>.swiper-wrapper::before {
+  height: 100%;
+  min-height: 1px;
+  width: var(--swiper-centered-offset-after);
+}
+
+.swiper-css-mode.swiper-centered.swiper-vertical>.swiper-wrapper>.swiper-slide:first-child {
+  margin-block-start: var(--swiper-centered-offset-before);
+}
+
+.swiper-css-mode.swiper-centered.swiper-vertical>.swiper-wrapper::before {
+  width: 100%;
+  min-width: 1px;
+  height: var(--swiper-centered-offset-after);
+}
+
+.swiper-3d .swiper-slide-shadow,
+.swiper-3d .swiper-slide-shadow-left,
+.swiper-3d .swiper-slide-shadow-right,
+.swiper-3d .swiper-slide-shadow-top,
+.swiper-3d .swiper-slide-shadow-bottom {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.swiper-3d .swiper-slide-shadow {
+  background: rgba(0, 0, 0, 0.1490196078);
+}
+
+.swiper-3d .swiper-slide-shadow-left {
+  background-image: linear-gradient(to left, rgba(0, 0, 0, 0.5019607843), rgba(0, 0, 0, 0));
+}
+
+.swiper-3d .swiper-slide-shadow-right {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5019607843), rgba(0, 0, 0, 0));
+}
+
+.swiper-3d .swiper-slide-shadow-top {
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5019607843), rgba(0, 0, 0, 0));
+}
+
+.swiper-3d .swiper-slide-shadow-bottom {
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5019607843), rgba(0, 0, 0, 0));
+}
+
+.swiper-lazy-preloader {
+  width: 42px;
+  height: 42px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -21px;
+  margin-top: -21px;
+  z-index: 10;
+  transform-origin: 50%;
+  box-sizing: border-box;
+  border: 4px solid var(--swiper-preloader-color, var(--swiper-theme-color));
+  border-radius: 50%;
+  border-top-color: transparent;
+}
+
+.swiper:not(.swiper-watch-progress) .swiper-lazy-preloader,
+.swiper-watch-progress .swiper-slide-visible .swiper-lazy-preloader {
+  animation: swiper-preloader-spin 1s infinite linear;
+}
+
+.swiper-lazy-preloader-white {
+  --swiper-preloader-color: #fff;
+}
+
+.swiper-lazy-preloader-black {
+  --swiper-preloader-color: #000;
+}
+
+@keyframes swiper-preloader-spin {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.swiper-fade.swiper-free-mode .swiper-slide {
+  transition-timing-function: ease-out;
+}
+
+.swiper-fade .swiper-slide {
+  pointer-events: none;
+  transition-property: opacity;
+}
+
+.swiper-fade .swiper-slide .swiper-slide {
+  pointer-events: none;
+}
+
+.swiper-fade .swiper-slide-active,
+.swiper-fade .swiper-slide-active .swiper-slide-active {
+  pointer-events: auto;
+}
+
+@media (min-width: 768px) {
+  .carousel--grid .swiper:not(.swiper-initialized) {
+    --f-slide-width: var(--f-columns-md,
+        var(--f-columns-lg, var(--f-columns-xl, var(--f-columns-xxl))));
+  }
+
+  .carousel--grid .swiper:not(.swiper-initialized) .swiper-wrapper {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    column-gap: var(--f-column-gap-max, var(--f-column-gap));
+  }
+
+  .carousel--grid .swiper:not(.swiper-initialized) .swiper-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel--grid .swiper:not(.swiper-initialized) :is(.swiper-slide, .swiper-slide-custom) {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .carousel--grid .swiper.swiper-initialized .swiper-wrapper {
+    --f-column-gap: 0px !important;
+  }
+
+  .carousel--grid:not(.carousel--view-auto) .swiper:not(.swiper-initialized) :is(.swiper-slide, .swiper-slide-custom) {
+    width: calc((100% - (var(--f-slide-width) - 1) * var(--f-column-gap-max, var(--f-column-gap))) / var(--f-slide-width));
+  }
+}
+
+@media (min-width: 1024px) {
+  .carousel--grid .swiper:not(.swiper-initialized) {
+    --f-slide-width: var(--f-columns-lg, var(--f-columns-xl, var(--f-columns-xxl)));
+  }
+}
+
+@media (min-width: 1200px) {
+  .carousel--grid .swiper:not(.swiper-initialized) {
+    --f-slide-width: var(--f-columns-xl, var(--f-columns-xxl));
+  }
+}
+
+@media (min-width: 1440px) {
+  .carousel--grid .swiper:not(.swiper-initialized) {
+    --f-slide-width: var(--f-columns-xxl);
+  }
+}
+
+@media (max-width: 767.98px) {
+  .carousel--grid .swiper.mobile-slider:not(.swiper-initialized) .swiper-wrapper {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    column-gap: var(--f-column-gap);
+  }
+
+  .carousel--grid .swiper.mobile-slider:not(.swiper-initialized) .swiper-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel--grid .swiper.mobile-slider .swiper-slide {
+    width: calc((100% - (var(--f-columns-mobile) - 1) * var(--f-column-gap)) / var(--f-columns-mobile));
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .carousel--grid .swiper.mobile-slider.swiper-initialized .swiper-wrapper {
+    --f-column-gap: 0px !important;
+  }
+}
+
+/* Motion component prestage - prevents flash before JS applies initial animation states */
+motion-component {
+  display: block;
+}
+
+motion-component:not([data-initialized]):not([data-motion-hold]) {
+  will-change: transform, opacity;
+}
+
+motion-component[data-initialized] {
+  will-change: auto;
+  /* Clean up sau animation */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* If disabled at any scope, neutralize prestage */
+  [data-motion-disabled] motion-component:not([data-initialized]),
+  motion-component[data-motion-off]:not([data-initialized]) {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    will-change: auto;
+  }
+
+  motion-component:not([data-initialized]):not([data-motion-hold])[data-motion='fade-in'] {
+    opacity: 0;
+  }
+
+  motion-component:not([data-initialized]):not([data-motion-hold])[data-motion='fade-up'] {
+    opacity: 0;
+    transform: translateY(2.5rem);
+  }
+
+  motion-component:not([data-initialized]):not([data-motion-hold])[data-motion='slide-in-left'] {
+    opacity: 0;
+    transform: translateX(-2.5rem);
+  }
+
+  motion-component:not([data-initialized]):not([data-motion-hold])[data-motion='slide-in-right'] {
+    opacity: 0;
+    transform: translateX(2.5rem);
+  }
+
+  motion-component:not([data-initialized])[data-motion='zoom-in'] {
+
+    transform: scale(0.8);
+  }
+
+  motion-component:not([data-initialized])[data-motion='zoom-out'] {
+
+    transform: scale(1.15);
+  }
+
+
+
+}
+
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+.lenis.lenis-autoToggle {
+  transition-property: overflow;
+  transition-duration: 1ms;
+  transition-behavior: allow-discrete;
+}
+
+
+/* General */
+.no-js-hidden {
+  display: none !important;
+}
+
+.no-js-alert {
+  margin-top: 1.6rem;
+}
+
+motion-component {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Component: Tab panels */
+.tabs__panels {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.tabs__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
+/* Component: Accordion */
+.accordion__details .accordion__summary-arrow.icon--caret svg {
+  transform: rotateX(0deg) !important;
+}
+
+.accordion__details[open] .accordion__summary-arrow.icon--caret svg {
+  transform: rotateX(180deg) !important;
+}
+
+/* Block: Card layered */
+.card-layered__description {
+  max-height: unset;
+}
+
+/* Section: Scrolling cards. */
+.scrolling-cards__headings {
+  height: auto;
+}
+
+.block-scrolling__headings {
+  position: static;
+}
+
+/* Template: Collection */
+@media (min-width: 1024px) {
+  results-list .collection__wrapper {
+    grid-template-areas:
+      'toolbar toolbar'
+      'remove-buttons remove-buttons'
+      'main-collection-grid main-collection-grid' !important;
+  }
+}
+
+/* Template: Product */
+
+/* Template: Cart */
+.cart-summary__addon[open] {
+  border-radius: min(1rem, var(--button-corner-radius));
+}
+
+.quantity-selector .quantity-input {
+  padding-inline: 2.8rem 1.2rem;
+}
+
+.quantity-selector .quantity-input::-webkit-outer-spin-button,
+.quantity-selector .quantity-input::-webkit-inner-spin-button {
+  -webkit-appearance: auto;
+}

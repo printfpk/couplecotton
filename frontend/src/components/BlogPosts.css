@@ -1,0 +1,147 @@
+/* BlogPosts.css */
+.blog {
+  padding: clamp(4.8rem, 7.5vw, 10rem) 0;
+  background: #fff;
+}
+
+.blog__container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2.4rem, 3vw, 4rem);
+}
+
+.blog__heading {
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  font-weight: 600;
+  color: #1a2e1a;
+  margin: 0;
+  text-align: center;
+}
+
+/* Grid */
+.blog__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.8rem, 2vw, 3rem);
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .blog__grid { grid-template-columns: 1fr; }
+}
+
+/* Card */
+.blog__card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.blog__card-img-wrap {
+  position: relative;
+  display: block;
+  border-radius: 20px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9.4;
+  text-decoration: none;
+}
+
+.blog__card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.blog__card-img-wrap:hover .blog__card-img {
+  transform: scale(1.04);
+}
+
+.blog__tag {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(4px);
+  color: #1a2e1a;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.75rem;
+  border-radius: 999px;
+}
+
+/* Card body */
+.blog__card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+  padding: 0 0.25rem;
+}
+
+.blog__card-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.blog__card-title a {
+  color: #1a2e1a;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.blog__card-title a:hover { color: #2d5a3f; }
+
+.blog__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: #9aaa9a;
+}
+
+.blog__meta-sep {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* Footer button */
+.blog__footer {
+  display: flex;
+  justify-content: center;
+}
+
+.blog__learn-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  background: #1e3b2a;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.18s, transform 0.15s;
+}
+
+.blog__learn-btn:hover {
+  background: #2d5a3f;
+  transform: translateY(-1px);
+}
+
+.blog__btn-icon {
+  width: 18px;
+  height: 18px;
+}

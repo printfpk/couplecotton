@@ -1,0 +1,600 @@
+/* ─── Navbar.css ──────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap');
+
+/* ════════════════════════════════════════
+   BASE
+════════════════════════════════════════ */
+.nb {
+  background-color: #1e3b2a;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+}
+
+.nb__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 68px;
+  position: relative;
+}
+
+/* ════════════════════════════════════════
+   LEFT NAV ITEMS
+════════════════════════════════════════ */
+.nb__left {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.nb__item {
+  position: static;
+  cursor: pointer;
+}
+
+.nb__item-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.42rem 1rem;
+  border-radius: 999px;
+  color: #e8f0e4;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: background 0.18s, color 0.18s;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.nb__item-btn:hover,
+.nb__item--open .nb__item-btn {
+  background: #c9e86b;
+  color: #1a2e1a;
+}
+
+.nb__caret {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.nb__item--open .nb__caret {
+  transform: rotate(180deg);
+}
+
+/* ════════════════════════════════════════
+   CENTER LOGO
+════════════════════════════════════════ */
+.nb__logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+}
+
+.nb__logo a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.nb__logo img {
+  height: 36px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+/* ════════════════════════════════════════
+   RIGHT ICONS
+════════════════════════════════════════ */
+.nb__right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.nb__search-wrap {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 0.38rem 1rem;
+  gap: 0.5rem;
+  transition: background 0.2s;
+}
+
+.nb__search-wrap:focus-within {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.nb__search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #d4e8cc;
+  font-size: 0.82rem;
+  font-family: inherit;
+  width: 180px;
+}
+
+.nb__search-input::placeholder {
+  color: rgba(212, 232, 204, 0.55);
+}
+
+.nb__icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #e8f0e4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem;
+  border-radius: 50%;
+  transition: background 0.18s;
+}
+
+.nb__icon-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.nb__icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ════════════════════════════════════════
+   MEGA MENU SHARED
+════════════════════════════════════════ */
+.mega {
+  position: absolute;
+  top: 68px;
+  left: 0;
+  right: 0;
+  background: #fff;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.14);
+  z-index: 999;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  animation: megaFadeIn 0.18s ease;
+}
+
+@keyframes megaFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mega__inner {
+  display: flex;
+  padding: 2.2rem 2.5rem;
+  gap: 2.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ════════════════════════════════════════
+   SHOP MENU
+════════════════════════════════════════ */
+.mega--shop .mega__inner {
+  align-items: flex-start;
+}
+
+/* Sidebar */
+.mega__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 195px;
+  border-right: 1px solid #f0f0f0;
+  padding-right: 2rem;
+}
+
+.mega__sidebar-link {
+  display: block;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #1a2e1a;
+  text-decoration: none;
+  font-weight: 400;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.mega__sidebar-link:hover,
+.mega__sidebar-link--active {
+  background: #f3f7f0;
+}
+
+.mega__sidebar-link--active {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Products grid */
+.mega__products {
+  flex: 1;
+}
+
+.mega__products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 2.5rem;
+}
+
+.mega__product-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: #1a2e1a;
+  transition: opacity 0.15s;
+}
+
+.mega__product-item:hover {
+  opacity: 0.75;
+}
+
+.mega__product-img {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #f5f5f5;
+}
+
+.mega__product-label {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+/* Promo card */
+.mega__promo {
+  min-width: 240px;
+  max-width: 280px;
+}
+
+.mega__promo-card {
+  border-radius: 14px;
+  background: linear-gradient(145deg, #4a6741 0%, #2d4a38 60%, #1e3228 100%);
+  padding: 1.8rem 1.5rem;
+  height: 100%;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.mega__promo-tag {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.mega__promo-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  color: #fff;
+  margin: 0;
+  font-weight: 400;
+}
+
+.mega__promo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #c9e86b;
+  color: #1a2e1a;
+  border-radius: 999px;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  align-self: flex-start;
+  transition: background 0.18s;
+  font-family: inherit;
+}
+
+.mega__promo-btn:hover {
+  background: #b5d44e;
+}
+
+.mega__promo-btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: #1a2e1a;
+  color: #c9e86b;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+/* ════════════════════════════════════════
+   COLLECTIONS MENU
+════════════════════════════════════════ */
+.mega--collections .mega__inner {
+  align-items: flex-start;
+}
+
+.mega__columns {
+  display: flex;
+  gap: 3rem;
+  flex: 1;
+}
+
+.mega__column-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a2e1a;
+  margin: 0 0 0.9rem 0;
+}
+
+.mega__column-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.mega__column-link {
+  font-size: 0.88rem;
+  color: #4a5a47;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.mega__column-link:hover {
+  color: #1a2e1a;
+}
+
+/* Image cards */
+.mega__cards {
+  display: flex;
+  gap: 1rem;
+}
+
+.mega__img-card {
+  position: relative;
+  width: 185px;
+  height: 220px;
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.mega__img-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s;
+}
+
+.mega__img-card:hover img {
+  transform: scale(1.05);
+}
+
+.mega__img-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 55%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1rem;
+  gap: 0.3rem;
+}
+
+.mega__img-card-tag {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  align-self: flex-start;
+}
+
+.mega__img-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  line-height: 1.25;
+  color: #fff;
+  margin: 0;
+  font-weight: 400;
+}
+
+.mega__img-card-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #c9e86b;
+  color: #1a2e1a;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-end;
+  transition: background 0.18s;
+}
+
+.mega__img-card-btn:hover {
+  background: #b5d44e;
+}
+
+/* ════════════════════════════════════════
+   PAGES MENU
+════════════════════════════════════════ */
+.mega--pages .mega__inner {
+  align-items: stretch;
+}
+
+.mega__quote {
+  min-width: 200px;
+  max-width: 230px;
+  display: flex;
+  align-items: center;
+}
+
+.mega__quote p {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: #1a2e1a;
+  margin: 0;
+  font-style: italic;
+}
+
+.mega__page-cards {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+}
+
+.mega__page-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  gap: 0.6rem;
+}
+
+.mega__page-card-image {
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: #f0f0f0;
+}
+
+.mega__page-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.mega__page-card:hover .mega__page-card-image img {
+  transform: scale(1.05);
+}
+
+.mega__page-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  color: #1a2e1a;
+  font-weight: 500;
+  padding: 0 0.2rem;
+}
+
+.mega__page-card-arrow {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.mega__page-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-width: 140px;
+  padding-left: 1.5rem;
+  border-left: 1px solid #f0f0f0;
+  justify-content: center;
+}
+
+.mega__page-link {
+  font-size: 0.88rem;
+  color: #4a5a47;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.mega__page-link:hover {
+  color: #1a2e1a;
+}
+
+/* ════════════════════════════════════════
+   FEATURES MENU (small dropdown)
+════════════════════════════════════════ */
+.mega--features {
+  position: absolute !important;
+  left: auto !important;
+  right: auto !important;
+  width: 240px;
+  border-radius: 14px;
+  top: 62px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14);
+  padding: 0.6rem;
+}
+
+.mega__features-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mega__features-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #1a2e1a;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.mega__features-item:hover {
+  background: #f3f7f0;
+}
+
+.mega__features-item-arrow {
+  color: #888;
+  font-size: 1rem;
+}

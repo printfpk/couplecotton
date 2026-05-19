@@ -1,0 +1,48 @@
+/* CustomSection3.css – Marquee ticker */
+.cs3 {
+  overflow: hidden;
+  background: #1e3b2a;
+  padding: 1.6rem 0;
+}
+
+.cs3__viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.cs3__track {
+  display: flex;
+  align-items: center;
+  gap: clamp(2.4rem, 3vw, 4rem);
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.cs3__text {
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  font-weight: 600;
+  color: #e8f0e4;
+  flex-shrink: 0;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+}
+
+.cs3__btn {
+  display: inline-block;
+  padding: 0.35rem 1.1rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(232, 240, 228, 0.45);
+  color: #e8f0e4;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: background 0.18s, border-color 0.18s;
+  letter-spacing: 0.04em;
+}
+
+.cs3__btn:hover {
+  background: rgba(201, 232, 107, 0.18);
+  border-color: #c9e86b;
+  color: #c9e86b;
+}
