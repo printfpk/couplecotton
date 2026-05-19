@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import './theme-styles.css';
 import Navbar from './components/Navbar';
 import HeroSlideshow from './components/HeroSlideshow';
@@ -22,8 +23,11 @@ import CartDrawer from './components/CartDrawer';
 import SearchDrawer from './components/SearchDrawer';
 import QuickAddDrawer from './components/QuickAddDrawer';
 import Popup from './components/Popup';
+import TryOnPage from './components/tryon/TryOnPage';
+import ProductPage from './components/ProductPage';
 
-function App() {
+/* ── Home Page (original store layout) ─────────────────────── */
+function HomePage() {
   const [cartOpen,        setCartOpen]        = React.useState(false);
   const [searchOpen,      setSearchOpen]      = React.useState(false);
   const [quickAddOpen,    setQuickAddOpen]    = React.useState(false);
@@ -79,6 +83,44 @@ function App() {
       />
       <Popup />
     </>
+  );
+}
+
+/* ── Product Page with Navbar+Footer shell ─────────────────── */
+function ProductPageWrapper() {
+  const [cartOpen, setCartOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
+
+  return (
+    <>
+      <Navbar
+        onSearchOpen={() => setSearchOpen(true)}
+        onCartOpen={() => setCartOpen(true)}
+      />
+      <ProductPage />
+      <Footer />
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+      <SearchDrawer open={searchOpen} onClose={() => setSearchOpen(false)} />
+    </>
+  );
+}
+
+/* ── Try-On Page Wrapper ───────────────────────────────────── */
+function TryOnPageWrapper() {
+  const navigate = useNavigate();
+  return <TryOnPage onBack={() => navigate('/')} />;
+}
+
+/* ── App with Router ───────────────────────────────────────── */
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/products/:slug" element={<ProductPageWrapper />} />
+        <Route path="/try-on" element={<TryOnPageWrapper />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

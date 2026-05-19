@@ -1,0 +1,473 @@
+/* ═══════════════════════════════════════════════════════════════
+   ProductPage.css — Product Detail Page with Live Try-On
+   Matches CoupleCotton green/earthy design
+   ═══════════════════════════════════════════════════════════════ */
+
+.pdp {
+  min-height: 100vh;
+  background: #f7f5f0;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #1a2e1a;
+}
+
+/* ── Main Layout ─────────────────────────────────────────────── */
+.pdp__main {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 32px 40px 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* ── Image Gallery (left) ────────────────────────────────────── */
+.pdp__gallery {
+  position: sticky;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pdp__gallery-main {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #eae6de;
+  position: relative;
+}
+
+.pdp__gallery-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.pdp__gallery-main:hover img {
+  transform: scale(1.03);
+}
+
+.pdp__gallery-thumbs {
+  display: flex;
+  gap: 10px;
+}
+
+.pdp__thumb {
+  width: 72px;
+  height: 90px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, opacity 0.2s;
+  background: #eae6de;
+}
+.pdp__thumb:hover { opacity: 0.8; }
+.pdp__thumb--active { border-color: #1e3b2a; }
+.pdp__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Product Info (right) ────────────────────────────────────── */
+.pdp__info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 8px;
+}
+
+.pdp__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #8a9a8a;
+}
+.pdp__breadcrumb a {
+  color: #8a9a8a;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.pdp__breadcrumb a:hover { color: #1e3b2a; }
+.pdp__breadcrumb span { color: #c4bfb3; }
+
+.pdp__type {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #8a9a8a;
+  font-weight: 600;
+}
+
+.pdp__name {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: #1a2e1a;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.pdp__price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.pdp__price {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e3b2a;
+}
+.pdp__price--compare {
+  font-size: 16px;
+  font-weight: 400;
+  color: #b0a898;
+  text-decoration: line-through;
+}
+.pdp__price--sale {
+  color: #c0392b;
+}
+
+.pdp__description {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #5a6a5a;
+}
+
+/* ── Color Options ───────────────────────────────────────────── */
+.pdp__option-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #6b7c6b;
+  margin-bottom: 10px;
+}
+
+.pdp__colors {
+  display: flex;
+  gap: 10px;
+}
+
+.pdp__color-swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid #e8e4dc;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.pdp__color-swatch:hover { transform: scale(1.12); }
+.pdp__color-swatch--active {
+  border-color: #1e3b2a;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #1e3b2a;
+}
+
+/* ── Size Options ────────────────────────────────────────────── */
+.pdp__sizes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pdp__size-btn {
+  min-width: 48px;
+  padding: 10px 16px;
+  border: 1px solid #d4cfc5;
+  border-radius: 8px;
+  background: #fff;
+  color: #6b7c6b;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.pdp__size-btn:hover { border-color: #4a6741; color: #1a2e1a; }
+.pdp__size-btn--active {
+  background: #1e3b2a;
+  border-color: #1e3b2a;
+  color: #fff;
+}
+
+/* ── Try-On Section ──────────────────────────────────────────── */
+.pdp__tryon-section {
+  border: 2px solid #c9e86b;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.pdp__tryon-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #eef5e6 0%, #f7f5f0 100%);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.pdp__tryon-header:hover {
+  background: linear-gradient(135deg, #e4eeda 0%, #f0ece4 100%);
+}
+
+.pdp__tryon-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pdp__tryon-icon {
+  font-size: 20px;
+}
+
+.pdp__tryon-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e3b2a;
+}
+
+.pdp__tryon-subtitle {
+  font-size: 12px;
+  color: #8a9a8a;
+  margin-top: 1px;
+}
+
+.pdp__tryon-toggle {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 999px;
+  background: #1e3b2a;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.pdp__tryon-toggle:hover {
+  background: #2d4a38;
+}
+.pdp__tryon-toggle--active {
+  background: #c9e86b;
+  color: #1a2e1a;
+}
+
+/* Camera area within product page */
+.pdp__tryon-camera {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #1a1a1a;
+  overflow: hidden;
+}
+
+.pdp__tryon-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.pdp__tryon-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: scaleX(-1);
+}
+
+.pdp__tryon-prompt {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e3b2a, #2d4a38);
+  gap: 14px;
+  text-align: center;
+  padding: 30px;
+}
+
+.pdp__tryon-prompt-icon {
+  font-size: 40px;
+  opacity: 0.8;
+}
+
+.pdp__tryon-prompt p {
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.pdp__tryon-start-btn {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 999px;
+  background: #c9e86b;
+  color: #1a2e1a;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.pdp__tryon-start-btn:hover {
+  background: #b5d44e;
+  transform: translateY(-1px);
+}
+
+/* Status */
+.pdp__tryon-status {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(30, 59, 42, 0.8);
+  backdrop-filter: blur(8px);
+  border-radius: 999px;
+  z-index: 5;
+}
+
+.pdp__tryon-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  animation: pdp-pulse 1.5s ease infinite;
+}
+.pdp__tryon-status-dot--ok { background: #c9e86b; }
+.pdp__tryon-status-dot--wait { background: #f59e0b; }
+
+@keyframes pdp-pulse {
+  0%,100% { opacity:1; }
+  50% { opacity:0.4; }
+}
+
+.pdp__tryon-status-text {
+  font-size: 11px;
+  color: rgba(255,255,255,0.8);
+  font-weight: 500;
+}
+
+/* Capture button */
+.pdp__tryon-actions {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+}
+
+.pdp__tryon-capture-btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(30,59,42,0.85);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.pdp__tryon-capture-btn:hover {
+  background: rgba(30,59,42,0.95);
+}
+
+/* ── Action Buttons ──────────────────────────────────────────── */
+.pdp__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pdp__add-cart {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  background: #1e3b2a;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  letter-spacing: 0.03em;
+}
+.pdp__add-cart:hover {
+  background: #2d4a38;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(30, 59, 42, 0.2);
+}
+
+.pdp__buy-now {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid #1e3b2a;
+  border-radius: 12px;
+  background: transparent;
+  color: #1e3b2a;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.pdp__buy-now:hover {
+  background: #1e3b2a;
+  color: #fff;
+}
+
+/* ── Features list ───────────────────────────────────────────── */
+.pdp__features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.pdp__feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #5a6a5a;
+}
+
+.pdp__feature-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .pdp__main {
+    grid-template-columns: 1fr;
+    padding: 20px 16px 40px;
+    gap: 24px;
+  }
+  .pdp__gallery {
+    position: static;
+  }
+  .pdp__name {
+    font-size: 26px;
+  }
+}

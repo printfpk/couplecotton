@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import './Navbar.css';
 
 const CDN = '/assets';
@@ -218,6 +219,7 @@ const Navbar = ({ onSearchOpen, onCartOpen }) => {
 
         {/* Right icons */}
         <div className="nb__right">
+          <Link to="/try-on" className="nb__tryon-btn">✨ Try On 3D</Link>
           <button className="nb__icon-btn" aria-label="Search" onClick={onSearchOpen}><IconSearch /></button>
           <button className="nb__icon-btn" aria-label="Account"><IconUser /></button>
           <button className="nb__icon-btn" aria-label="Cart" onClick={onCartOpen}><IconCart /></button>

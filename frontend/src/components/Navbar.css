@@ -156,6 +156,29 @@
   height: 20px;
 }
 
+/* Try-On 3D CTA button */
+.nb__tryon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #a78bfa, #6ee7b7);
+  color: #0a0a0f;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+  box-shadow: 0 2px 12px rgba(167, 139, 250, 0.25);
+}
+.nb__tryon-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(167, 139, 250, 0.4);
+  opacity: 0.92;
+}
+
 /* ════════════════════════════════════════
    MEGA MENU SHARED
 ════════════════════════════════════════ */

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import './ProductTabs.css';
 
 const CDN = '/assets';
@@ -32,7 +33,7 @@ const TABS = [
   { key: 'new',  label: 'New Arrivals', products: NEW_ARRIVALS },
 ];
 
-const stop = e => e.preventDefault();
+
 
 /* ── Animation variants ──────────────────────────────────────── */
 const gridVariants = {
@@ -65,7 +66,7 @@ const ProductCard = ({ product }) => {
         <span className={`ptabs__badge ptabs__badge--${badge.toLowerCase()}`}>{badge}</span>
       )}
 
-      <a href={href} onClick={stop} className="ptabs__card-img-link" tabIndex="-1" aria-hidden="true">
+      <Link to={href} className="ptabs__card-img-link" tabIndex="-1" aria-hidden="true">
         <div className="ptabs__card-media">
           <img
             src={hovered && img2 ? img2 : img1}
@@ -74,20 +75,20 @@ const ProductCard = ({ product }) => {
             loading="lazy"
           />
         </div>
-      </a>
+      </Link>
 
       <div className="ptabs__card-info">
         <span className="ptabs__card-type">{type}</span>
-        <a href={href} onClick={stop} className="ptabs__card-name">{name}</a>
+        <Link to={href} className="ptabs__card-name">{name}</Link>
         <div className="ptabs__card-price">
           <span className={`ptabs__price${onSale ? ' ptabs__price--sale' : ''}`}>{price}</span>
           {compareAt && <span className="ptabs__price ptabs__price--compare">{compareAt}</span>}
         </div>
       </div>
 
-      <a href={href} onClick={stop} className="ptabs__quick-add">
+      <Link to={href} className="ptabs__quick-add">
         Choose options →
-      </a>
+      </Link>
     </motion.div>
   );
 };
