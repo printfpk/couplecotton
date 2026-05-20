@@ -471,3 +471,83 @@
     font-size: 26px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE TRY-ON — Full-width camera, large touch targets,
+   safe-area insets for iPhone notch
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Camera: 4:3 on mobile (portrait fills more screen) */
+  .pdp__tryon-camera {
+    aspect-ratio: 3 / 4;
+    border-radius: 0;
+  }
+
+  /* Start button — large enough to tap easily */
+  .pdp__tryon-start-btn {
+    min-height: 52px;
+    font-size: 16px;
+    padding: 14px 28px;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  /* Status badge — bigger text on small screen */
+  .pdp__tryon-status {
+    font-size: 13px;
+    padding: 7px 14px;
+  }
+
+  /* Capture button — thumb-friendly position */
+  .pdp__tryon-actions {
+    bottom: max(16px, env(safe-area-inset-bottom, 16px));
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    width: max-content;
+  }
+
+  .pdp__tryon-capture-btn {
+    min-height: 48px;
+    font-size: 15px;
+    padding: 12px 24px;
+    white-space: nowrap;
+  }
+
+  /* Prompt text */
+  .pdp__tryon-prompt p {
+    font-size: 14px;
+  }
+
+  /* Try-on header */
+  .pdp__tryon-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+/* Spinner (used in loading state) */
+.pdp__tryon-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid rgba(201, 232, 107, 0.2);
+  border-top-color: #c9e86b;
+  border-radius: 50%;
+  animation: pdp-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes pdp-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error prompt variant */
+.pdp__tryon-prompt--error {
+  background: linear-gradient(135deg, #3b1e1e, #4a2d2d);
+}
+
+/* iOS safe area — prevents UI hiding behind home bar */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pdp__tryon-actions {
+    bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+}
