@@ -2,27 +2,24 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './HeroSlideshow.css';
 
-const CDN = '/assets';
-const v1 = '1774428659', v1m = '1774428658', v3 = '1774428660';
-
 const SLIDES = [
   {
-    imgD: 'https://loremflickr.com/1920/1080/couple,fashion?lock=1',
-    imgM: 'https://loremflickr.com/960/1200/couple,fashion?lock=1',
+    imgD: '/assets/hero-slide-1.webp',
+    imgM: '/assets/hero-slide-1-m.webp',
     tag:  'New Collection',
     headline: <>Style that matches<br /><em>your story.</em></>,
     href: '/collections/couple-sets',
   },
   {
-    imgD: 'https://loremflickr.com/1920/1080/couple,fashion?lock=2',
-    imgM: 'https://loremflickr.com/960/1200/couple,fashion?lock=2',
+    imgD: '/assets/hero-slide-2.webp',
+    imgM: '/assets/hero-slide-2-m.webp',
     tag:  'Couple Essentials',
     headline: <>Together in <br /><em>every thread.</em></>,
     href: '/collections/matching-tees',
   },
   {
-    imgD: 'https://loremflickr.com/1920/1080/couple,fashion?lock=3',
-    imgM: 'https://loremflickr.com/960/1200/couple,fashion?lock=3',
+    imgD: '/assets/hero-slide-3.webp',
+    imgM: '/assets/hero-slide-3-m.webp',
     tag:  'Premium Cotton',
     headline: <>Dress alike, <br />feel <em>closer.</em></>,
     href: '/collections/all',
@@ -58,7 +55,9 @@ const contentVariants = {
   }),
 };
 
-const HeroSlideshow = () => {
+const SLIDE_DURATION = 5000;
+
+const HeroSlideshow = ({ children }) => {
   const [[active, dir], setSlide] = useState([0, 0]);
   const total    = SLIDES.length;
   const timerRef = useRef(null);
@@ -69,7 +68,7 @@ const HeroSlideshow = () => {
   }, [total]);
 
   useEffect(() => {
-    timerRef.current = setInterval(() => goTo(active + 1), 5000);
+    timerRef.current = setInterval(() => goTo(active + 1), SLIDE_DURATION);
     return () => clearInterval(timerRef.current);
   }, [active, goTo]);
 
@@ -77,6 +76,7 @@ const HeroSlideshow = () => {
 
   return (
     <section className="hero" aria-label="Hero slideshow">
+      {children ? <div className="hero__nav">{children}</div> : null}
       <div className="hero__track" style={{ overflow: 'hidden', position: 'relative' }}>
         <AnimatePresence initial={false} custom={dir} mode="sync">
           <motion.div
@@ -129,9 +129,11 @@ const HeroSlideshow = () => {
         </span>
         <div className="hero__progress">
           <motion.div
+            key={active}
             className="hero__progress-bar"
-            animate={{ width: `${((active + 1) / total) * 100}%` }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            initial={{ width: '0%' }}
+            animate={{ width: '100%' }}
+            transition={{ duration: SLIDE_DURATION / 1000, ease: 'linear' }}
           />
         </div>
         <div className="hero__arrows">

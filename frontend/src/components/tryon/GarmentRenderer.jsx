@@ -1,320 +1,232 @@
-import React, { useRef, useEffect, useMemo } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
-import * as THREE from 'three';
+import React, { useRef, useEffect, useState } from 'react';
 
 /* ─────────────────────────────────────────────────────────────
-   GarmentModel — Loads a .glb and scales it to match the
-   detected body using an orthographic camera overlay.
+   GarmentRenderer — 2.5D Layered Cloth Compositing Engine
+   Replaces the old single-mesh TPS and GLB pipelines with a
+   fast, multi-layered canvas compositing approach.
    ───────────────────────────────────────────────────────────── */
-const GarmentModel = ({ modelPath, bodyMetrics, color, videoWidth, videoHeight }) => {
-  const groupRef = useRef();
-  const { scene } = useGLTF(modelPath);
-  const clonedScene = useMemo(() => scene.clone(true), [scene]);
 
-  // Measure the model's native bounding box once
-  const modelInfo = useMemo(() => {
-    const box = new THREE.Box3().setFromObject(clonedScene);
-    const size = box.getSize(new THREE.Vector3());
-    const center = box.getCenter(new THREE.Vector3());
-    return { width: size.x || 1, height: size.y || 1, depth: size.z || 1, center };
-  }, [clonedScene]);
-
-  // Apply color tint
-  useEffect(() => {
-    if (!color) return;
-    clonedScene.traverse((child) => {
-      if (child.isMesh && child.material) {
-        const mat = child.material.clone();
-        mat.color = new THREE.Color(color);
-        child.material = mat;
-      }
-    });
-  }, [clonedScene, color]);
-
-  // Position/scale each frame based on body landmarks
-  useFrame(() => {
-    if (!groupRef.current || !bodyMetrics || !videoWidth || !videoHeight) return;
-
-    const { shoulderMid, hipMid, shoulderWidth, torsoHeight, bodyAngle, depthZ } = bodyMetrics;
-
-    // Convert to pixel coordinates
-    const smX = shoulderMid.x * videoWidth;
-    const smY = shoulderMid.y * videoHeight;
-    const hmY = hipMid.y * videoHeight;
-    const swPx = shoulderWidth * videoWidth;
-    const thPx = torsoHeight * videoHeight;
-
-    // Scale: use the larger of width-based or height-based scaling
-    const targetWidth = swPx * 1.8;
-    const targetHeight = thPx * 1.5;
-    const scaleW = targetWidth / modelInfo.width;
-    const scaleH = targetHeight / modelInfo.height;
-    const finalScale = Math.max(scaleW, scaleH);
-
-    const centerOffsetX = modelInfo.center.x * finalScale;
-    const centerOffsetY = modelInfo.center.y * finalScale;
-    const bodyMidY = (smY + hmY) / 2;
-
-    groupRef.current.position.set(smX - centerOffsetX, bodyMidY + centerOffsetY, 1 + depthZ);
-    groupRef.current.scale.setScalar(finalScale);
-    groupRef.current.rotation.set(0, 0, -bodyAngle);
-  });
-
-  return (
-    <group ref={groupRef}>
-      <primitive object={clonedScene} />
-    </group>
-  );
-};
-
-/* ─────────────────────────────────────────────────────────────
-   OrthoCamera — Syncs orthographic camera to video dimensions
-   ───────────────────────────────────────────────────────────── */
-const OrthoCamera = ({ videoWidth, videoHeight }) => {
-  const { camera } = useThree();
-  useEffect(() => {
-    if (!videoWidth || !videoHeight) return;
-    camera.left = 0;
-    camera.right = videoWidth;
-    camera.top = 0;
-    camera.bottom = videoHeight;
-    camera.near = 0.1;
-    camera.far = 100;
-    camera.position.set(0, 0, 10);
-    camera.updateProjectionMatrix();
-  }, [camera, videoWidth, videoHeight]);
-  return null;
-};
-
-/* ─────────────────────────────────────────────────────────────
-   GLBScene — Three.js scene for .glb models only
-   ───────────────────────────────────────────────────────────── */
-const GLBScene = ({ modelPath, bodyMetrics, color, videoWidth, videoHeight }) => (
-  <>
-    <OrthoCamera videoWidth={videoWidth} videoHeight={videoHeight} />
-    <ambientLight intensity={0.8} />
-    <directionalLight position={[2, 3, 4]} intensity={0.7} />
-    <directionalLight position={[-2, 1, -2]} intensity={0.3} />
-    <React.Suspense fallback={null}>
-      <GarmentModel
-        modelPath={modelPath}
-        bodyMetrics={bodyMetrics}
-        color={color}
-        videoWidth={videoWidth}
-        videoHeight={videoHeight}
-      />
-    </React.Suspense>
-  </>
-);
-
-/* ─────────────────────────────────────────────────────────────
-   Canvas2DGarment — Draws a shirt shape directly on a 2D
-   canvas using actual body landmark pixel positions.
-   
-   This is the fallback when no .glb model is available.
-   Much more accurate than 3D boxes because it uses the
-   real landmark positions to draw the garment contour.
-   ───────────────────────────────────────────────────────────── */
-const Canvas2DGarment = ({ bodyMetrics, color, garmentType, videoWidth, videoHeight }) => {
+const GarmentRenderer = ({ 
+  assets, // { torso, leftSleeve, rightSleeve, collar }
+  bodyMetrics, 
+  videoWidth, 
+  videoHeight 
+}) => {
   const canvasRef = useRef(null);
-  const dimsRef = useRef({ w: 0, h: 0 });
+  const [loadedImages, setLoadedImages] = useState({});
 
+  // 1. Load image assets
+  useEffect(() => {
+    if (!assets) return;
+    
+    let isCancelled = false;
+    const loadImages = async () => {
+      const keys = Object.keys(assets);
+      const promises = keys.map((key) => {
+        return new Promise((resolve) => {
+          if (!assets[key]) {
+            resolve({ key, img: null });
+            return;
+          }
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.onload = () => resolve({ key, img });
+          img.onerror = () => resolve({ key, img: null });
+          img.src = assets[key];
+        });
+      });
+
+      const results = await Promise.all(promises);
+      if (isCancelled) return;
+
+      const newImages = {};
+      results.forEach(({ key, img }) => {
+        if (img) newImages[key] = img;
+      });
+      setLoadedImages(newImages);
+    };
+
+    loadImages();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [assets]);
+
+  // 2. Render Loop
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !bodyMetrics || !videoWidth || !videoHeight) return;
 
-    // Only reset canvas dimensions if they changed
-    if (dimsRef.current.w !== videoWidth || dimsRef.current.h !== videoHeight) {
+    if (canvas.width !== videoWidth || canvas.height !== videoHeight) {
       canvas.width = videoWidth;
       canvas.height = videoHeight;
-      dimsRef.current = { w: videoWidth, h: videoHeight };
     }
 
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, videoWidth, videoHeight);
 
     const {
-      leftShoulder, rightShoulder,
-      leftElbow, rightElbow,
-      leftHip, rightHip,
-      shoulderWidth, torsoHeight,
+      landmarks,
+      worldLandmarks
     } = bodyMetrics;
 
-    if (!leftShoulder || !rightShoulder || !leftHip || !rightHip) return;
+    if (!landmarks || !worldLandmarks || landmarks.length < 25) return;
 
-    // Convert normalized (0-1) to pixel coordinates
-    const lsX = leftShoulder.x * videoWidth;
-    const lsY = leftShoulder.y * videoHeight;
-    const rsX = rightShoulder.x * videoWidth;
-    const rsY = rightShoulder.y * videoHeight;
-    const lhX = leftHip.x * videoWidth;
-    const lhY = leftHip.y * videoHeight;
-    const rhX = rightHip.x * videoWidth;
-    const rhY = rightHip.y * videoHeight;
+    // MediaPipe Pose landmarks
+    const leftShoulder = landmarks[11];
+    const rightShoulder = landmarks[12];
+    const leftElbow = landmarks[13];
+    const rightElbow = landmarks[14];
+    const leftHip = landmarks[23];
+    const rightHip = landmarks[24];
 
-    const swPx = shoulderWidth * videoWidth;
-    const thPx = torsoHeight * videoHeight;
+    // World Landmarks for true 3D rotations/angles
+    const wLeftShoulder = worldLandmarks[11];
+    const wRightShoulder = worldLandmarks[12];
+    const wLeftElbow = worldLandmarks[13];
+    const wRightElbow = worldLandmarks[14];
 
-    // ─── Key proportions ───
-    // Generous padding so shirt extends well past the body
-    const pad = swPx * 0.30;
+    // Convert to pixel space
+    const ls = { x: leftShoulder.x * videoWidth, y: leftShoulder.y * videoHeight };
+    const rs = { x: rightShoulder.x * videoWidth, y: rightShoulder.y * videoHeight };
+    
+    const lh = leftHip ? { x: leftHip.x * videoWidth, y: leftHip.y * videoHeight } : { x: ls.x, y: ls.y + videoHeight * 0.4 };
+    const rh = rightHip ? { x: rightHip.x * videoWidth, y: rightHip.y * videoHeight } : { x: rs.x, y: rs.y + videoHeight * 0.4 };
+    
+    const swPx = Math.abs(ls.x - rs.x) * 1.2; // roughly shoulder width
+    const thPx = Math.abs(lh.y - ls.y); // torso height
+    
+    const shoulderMidX = (ls.x + rs.x) / 2;
+    const shoulderMidY = (ls.y + rs.y) / 2;
+    
+    // Use worldLandmarks to determine the true 3D shoulder angle
+    // dx and dy in the physical plane (assuming z is depth, x is lateral, y is vertical)
+    const shoulderAngle3D = Math.atan2(wRightShoulder.y - wLeftShoulder.y, wRightShoulder.x - wLeftShoulder.x);
 
-    // Neckline center
-    const neckX = (lsX + rsX) / 2;
-    const neckY = (lsY + rsY) / 2 - pad * 0.4;
-
-    // Outer shoulder points (where shirt edge sits, past actual shoulders)
-    const lsOutX = lsX + pad;
-    const lsOutY = lsY;
-    const rsOutX = rsX - pad;
-    const rsOutY = rsY;
-
-    // Hem points (below hips, shirt hangs lower)
-    const hemDrop = thPx * 0.20; // shirt extends 20% below hip line
-    const lhOutX = lhX + pad * 0.8;
-    const lhOutY = lhY + hemDrop;
-    const rhOutX = rhX - pad * 0.8;
-    const rhOutY = rhY + hemDrop;
-
-    // Armpit / side seam midpoints (slight outward bulge for natural body curve)
-    const lArmpit = {
-      x: (lsOutX + lhOutX) / 2 + pad * 0.3,
-      y: (lsOutY + lhOutY) / 2 - thPx * 0.05,
-    };
-    const rArmpit = {
-      x: (rsOutX + rhOutX) / 2 - pad * 0.3,
-      y: (rsOutY + rhOutY) / 2 - thPx * 0.05,
-    };
-
-    // Waist taper (slight inward curve at waist)
-    const waistInset = pad * 0.15;
-    const lWaist = {
-      x: (lsOutX + lhOutX) / 2 + pad * 0.1 - waistInset,
-      y: (lsOutY + lhOutY) / 2 + thPx * 0.15,
-    };
-    const rWaist = {
-      x: (rsOutX + rhOutX) / 2 - pad * 0.1 + waistInset,
-      y: (rsOutY + rhOutY) / 2 + thPx * 0.15,
+    ctx.save();
+    
+    // ─── HELPER: Draw Layer ───
+    const drawLayer = (img, x, y, width, height, angle, originX = 0.5, originY = 0.5) => {
+      if (!img) return;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      // originX/Y define pivot point relative to image dimensions
+      ctx.drawImage(img, -width * originX, -height * originY, width, height);
+      ctx.restore();
     };
 
-    // Elbow positions for sleeves
-    const leX = leftElbow ? leftElbow.x * videoWidth : lsX + swPx * 0.5;
-    const leY = leftElbow ? leftElbow.y * videoHeight : lsY + swPx * 0.45;
-    const reX = rightElbow ? rightElbow.x * videoWidth : rsX - swPx * 0.5;
-    const reY = rightElbow ? rightElbow.y * videoHeight : rsY + swPx * 0.45;
+    // ─── 1. TORSO ───
+    if (loadedImages.torso) {
+      const hipsMidX = (lh.x + rh.x) / 2;
+      const hipsMidY = (lh.y + rh.y) / 2;
+      
+      const torsoCenterX = (shoulderMidX + hipsMidX) / 2;
+      const torsoCenterY = (shoulderMidY + hipsMidY) / 2;
 
-    // Sleeve dimensions
-    const sleeveWidthTop = swPx * 0.22;
-    const sleeveWidthBottom = swPx * 0.16;
+      const displayWidth = swPx * 1.5; 
+      const displayHeight = thPx * 1.2;
 
-    const fillColor = color || '#1B2A4A';
+      drawLayer(
+        loadedImages.torso,
+        torsoCenterX,
+        torsoCenterY,
+        displayWidth,
+        displayHeight,
+        shoulderAngle3D, 
+        0.5, 
+        0.5
+      );
+    }
 
-    // ─── DRAW TORSO ───
-    // Shape: neckline → right shoulder → right side curve → right hem →
-    //        left hem → left side curve → left shoulder → neckline
-    ctx.beginPath();
+    // ─── 2. LEFT SLEEVE ───
+    if (loadedImages.leftSleeve) {
+      const startX = ls.x;
+      const startY = ls.y;
+      
+      const leX = leftElbow ? leftElbow.x * videoWidth : ls.x + swPx * 0.4;
+      const leY = leftElbow ? leftElbow.y * videoHeight : ls.y + swPx * 0.4;
 
-    // Start at neckline (right side of neck opening)
-    ctx.moveTo(neckX + swPx * 0.06, neckY);
+      // Use true 3D vector for sleeve angle mapping
+      let sleeveAngle = Math.atan2(leY - startY, leX - startX);
+      if (wLeftElbow) {
+        sleeveAngle = Math.atan2(wLeftElbow.y - wLeftShoulder.y, wLeftElbow.x - wLeftShoulder.x);
+      }
 
-    // Neckline curve to right shoulder
-    ctx.quadraticCurveTo(
-      rsOutX + pad * 0.1, rsOutY - pad * 0.6,
-      rsOutX, rsOutY
-    );
+      // Foreshortening: Use 3D length vs 2D length to determine scale/perspective
+      // For now, sticking to constant length or simple 2D distance
+      const sleeveLength = Math.hypot(leX - startX, leY - startY) * 1.2; 
+      const sleeveWidth = swPx * 0.6; 
 
-    // Right side: shoulder → armpit → waist → hip (natural body curve)
-    ctx.bezierCurveTo(
-      rArmpit.x, rArmpit.y,
-      rWaist.x, rWaist.y,
-      rhOutX, rhOutY
-    );
+      drawLayer(
+        loadedImages.leftSleeve,
+        startX,
+        startY,
+        sleeveLength,
+        sleeveWidth,
+        sleeveAngle,
+        0.1, 
+        0.5  
+      );
+    }
 
-    // Bottom hem (slight curve)
-    const hemMidX = (lhOutX + rhOutX) / 2;
-    const hemMidY = Math.max(lhOutY, rhOutY) + thPx * 0.03;
-    ctx.quadraticCurveTo(hemMidX, hemMidY, lhOutX, lhOutY);
+    // ─── 3. RIGHT SLEEVE ───
+    if (loadedImages.rightSleeve) {
+      const startX = rs.x;
+      const startY = rs.y;
+      
+      const reX = rightElbow ? rightElbow.x * videoWidth : rs.x - swPx * 0.4;
+      const reY = rightElbow ? rightElbow.y * videoHeight : rs.y + swPx * 0.4;
 
-    // Left side: hip → waist → armpit → shoulder (natural body curve)
-    ctx.bezierCurveTo(
-      lWaist.x, lWaist.y,
-      lArmpit.x, lArmpit.y,
-      lsOutX, lsOutY
-    );
+      let sleeveAngle = Math.atan2(reY - startY, reX - startX);
+      if (wRightElbow) {
+         sleeveAngle = Math.atan2(wRightElbow.y - wRightShoulder.y, wRightElbow.x - wRightShoulder.x);
+      }
 
-    // Left shoulder back to neckline
-    ctx.quadraticCurveTo(
-      lsOutX - pad * 0.1, lsOutY - pad * 0.6,
-      neckX - swPx * 0.06, neckY
-    );
+      const sleeveLength = Math.hypot(reX - startX, reY - startY) * 1.2;
+      const sleeveWidth = swPx * 0.6;
 
-    // V-neckline
-    ctx.quadraticCurveTo(
-      neckX, neckY + swPx * 0.1,
-      neckX + swPx * 0.06, neckY
-    );
+      drawLayer(
+        loadedImages.rightSleeve,
+        startX,
+        startY,
+        sleeveLength,
+        sleeveWidth,
+        sleeveAngle,
+        0.1, 
+        0.5 
+      );
+    }
 
-    ctx.closePath();
-    ctx.fillStyle = fillColor;
-    ctx.fill();
+    // ─── 4. COLLAR ───
+    if (loadedImages.collar) {
+      const collarWidth = swPx * 0.8;
+      const collarHeight = collarWidth * (loadedImages.collar.height / loadedImages.collar.width);
+      
+      const offsetX = Math.cos(shoulderAngle3D + Math.PI/2) * (collarHeight * 0.2);
+      const offsetY = Math.sin(shoulderAngle3D + Math.PI/2) * (collarHeight * 0.2);
 
-    // Subtle edge/shadow for depth
-    ctx.strokeStyle = 'rgba(0,0,0,0.3)';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
+      drawLayer(
+        loadedImages.collar,
+        shoulderMidX - offsetX,
+        shoulderMidY - offsetY,
+        collarWidth, 
+        collarHeight,
+        shoulderAngle3D, 
+        0.5,
+        0.8 
+      );
+    }
 
-    // ─── DRAW LEFT SLEEVE ───
-    const lsAngle = Math.atan2(leY - lsY, leX - lsX);
-    const lsPerpX = Math.cos(lsAngle + Math.PI / 2);
-    const lsPerpY = Math.sin(lsAngle + Math.PI / 2);
+    ctx.restore();
 
-    ctx.beginPath();
-    // Start from shoulder outer edge (top of sleeve)
-    ctx.moveTo(lsOutX + lsPerpX * sleeveWidthTop, lsOutY + lsPerpY * sleeveWidthTop);
-    // To elbow (outer edge)
-    ctx.lineTo(leX + lsPerpX * sleeveWidthBottom, leY + lsPerpY * sleeveWidthBottom);
-    // Across elbow opening
-    ctx.lineTo(leX - lsPerpX * sleeveWidthBottom, leY - lsPerpY * sleeveWidthBottom);
-    // Back to shoulder (inner edge / armpit side)
-    ctx.lineTo(lsOutX - lsPerpX * sleeveWidthTop, lsOutY - lsPerpY * sleeveWidthTop);
-    ctx.closePath();
-    ctx.fillStyle = fillColor;
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    // ─── DRAW RIGHT SLEEVE ───
-    const rsAngle = Math.atan2(reY - rsY, reX - rsX);
-    const rsPerpX = Math.cos(rsAngle + Math.PI / 2);
-    const rsPerpY = Math.sin(rsAngle + Math.PI / 2);
-
-    ctx.beginPath();
-    ctx.moveTo(rsOutX + rsPerpX * sleeveWidthTop, rsOutY + rsPerpY * sleeveWidthTop);
-    ctx.lineTo(reX + rsPerpX * sleeveWidthBottom, reY + rsPerpY * sleeveWidthBottom);
-    ctx.lineTo(reX - rsPerpX * sleeveWidthBottom, reY - rsPerpY * sleeveWidthBottom);
-    ctx.lineTo(rsOutX - rsPerpX * sleeveWidthTop, rsOutY - rsPerpY * sleeveWidthTop);
-    ctx.closePath();
-    ctx.fillStyle = fillColor;
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    // ─── COLLAR / NECKLINE highlight ───
-    ctx.beginPath();
-    ctx.moveTo(neckX - swPx * 0.06, neckY);
-    ctx.quadraticCurveTo(neckX, neckY + swPx * 0.1, neckX + swPx * 0.06, neckY);
-    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-  }, [bodyMetrics, color, garmentType, videoWidth, videoHeight]);
+  }, [loadedImages, bodyMetrics, videoWidth, videoHeight]);
 
   return (
     <canvas
       ref={canvasRef}
+      className="tryon__canvas-layered-garment"
       style={{
         position: 'absolute',
         top: 0,
@@ -322,63 +234,8 @@ const Canvas2DGarment = ({ bodyMetrics, color, garmentType, videoWidth, videoHei
         width: '100%',
         height: '100%',
         pointerEvents: 'none',
-        transform: 'scaleX(-1)', // mirror to match camera
+        transform: 'scaleX(-1)', // Mirror to match the camera feed
       }}
-    />
-  );
-};
-
-/* ─────────────────────────────────────────────────────────────
-   GarmentRenderer — Decides between:
-   1. Three.js Canvas with .glb model (when file exists)
-   2. 2D Canvas with drawn garment shape (fallback)
-   ───────────────────────────────────────────────────────────── */
-const GarmentRenderer = ({ modelPath, bodyMetrics, color, garmentType, videoWidth, videoHeight }) => {
-  const hasModel = modelPath && modelPath.endsWith('.glb');
-
-  if (hasModel) {
-    return (
-      <Canvas
-        orthographic
-        gl={{ alpha: true, antialias: true, preserveDrawingBuffer: true }}
-        camera={{
-          position: [0, 0, 10],
-          near: 0.1,
-          far: 100,
-          left: 0,
-          right: videoWidth || 640,
-          top: 0,
-          bottom: videoHeight || 480,
-        }}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          pointerEvents: 'none',
-          transform: 'scaleX(-1)',
-        }}
-      >
-        <GLBScene
-          modelPath={modelPath}
-          bodyMetrics={bodyMetrics}
-          color={color}
-          videoWidth={videoWidth}
-          videoHeight={videoHeight}
-        />
-      </Canvas>
-    );
-  }
-
-  // Fallback: 2D canvas garment drawn from body landmarks
-  return (
-    <Canvas2DGarment
-      bodyMetrics={bodyMetrics}
-      color={color}
-      garmentType={garmentType}
-      videoWidth={videoWidth}
-      videoHeight={videoHeight}
     />
   );
 };

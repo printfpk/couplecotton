@@ -60,6 +60,8 @@ const quoteVariants = {
   exit:  { opacity: 0, y: -20, transition: { duration: 0.3 } },
 };
 
+const SLIDE_DURATION = 6000;
+
 const TestimonialsSlider = () => {
   const [active, setActive] = useState(0);
   const total    = SLIDES.length;
@@ -68,7 +70,7 @@ const TestimonialsSlider = () => {
   const goTo = useCallback((idx) => setActive((idx + total) % total), [total]);
 
   useEffect(() => {
-    timerRef.current = setInterval(() => goTo(active + 1), 5000);
+    timerRef.current = setInterval(() => goTo(active + 1), SLIDE_DURATION);
     return () => clearInterval(timerRef.current);
   }, [active, goTo]);
 
@@ -132,9 +134,13 @@ const TestimonialsSlider = () => {
             {String(active + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
           </span>
           <div className="ts__progress">
-            <motion.div className="ts__progress-bar"
-              animate={{ width: `${((active + 1) / total) * 100}%` }}
-              transition={{ duration: 0.5, ease: 'easeOut' }} />
+            <motion.div
+              key={active}
+              className="ts__progress-bar"
+              initial={{ width: '0%' }}
+              animate={{ width: '100%' }}
+              transition={{ duration: SLIDE_DURATION / 1000, ease: 'linear' }}
+            />
           </div>
           <div className="ts__arrows">
             <button className="ts__arrow" aria-label="Previous" onClick={() => goTo(active - 1)}>

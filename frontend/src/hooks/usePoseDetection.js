@@ -102,7 +102,10 @@ export default function usePoseDetection() {
     try {
       const result = landmarkerRef.current.detectForVideo(videoElement, now);
       if (result?.landmarks?.length > 0) {
-        return result.landmarks[0];
+        return {
+          landmarks: result.landmarks[0],
+          worldLandmarks: result.worldLandmarks?.[0] || []
+        };
       }
     } catch { /* skip frame on error */ }
 

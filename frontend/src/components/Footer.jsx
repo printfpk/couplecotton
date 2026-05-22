@@ -23,7 +23,14 @@ const LEGAL_LINKS = [
   { label: 'Terms of Service', href: '/pages/need-a-hand' },
   { label: 'Privacy Policy',   href: '/policies/privacy-policy' },
 ];
-const IG_IMAGES = [1,2,3,4,5,6].map(n => `https://loremflickr.com/300/300/couple,clothing?lock=${n + 100}`);
+const IG_IMAGES = [
+  `${CDN}/progress-2.webp`,
+  `${CDN}/progress-1.webp`,
+  `${CDN}/DailySkinHydrator1597881486.webp`,
+  `${CDN}/DailyDetoxSupport1597881463.webp`,
+  `${CDN}/DailyOmegaComplex1597881476.webp`,
+  `${CDN}/WellinaPlantProtein1597881526.webp`,
+];
 
 const stop = e => e.preventDefault();
 
@@ -40,6 +47,11 @@ const IGIcon = () => (
 const TikTokIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
     <path d="M9.99 17.26c1.33 0 2.41-.96 2.41-2.42V4h2.9c-.16 1.98 1.8 3.89 3.97 3.84v2.73c-1.85 0-3.43-.78-3.98-1.21v5.49c0 2.42-1.9 5.15-5.3 5.15C6.58 20 4.72 17.26 4.72 14.84c0-3.41 3.61-5.39 6-4.91v2.78c-.12-.04-.3-.07-.57-.07C8.68 12.6 7.57 13.65 7.57 14.84c0 1.34 1.08 2.42 2.42 2.42z" fill="currentColor"/>
+  </svg>
+);
+const PinterestIcon = () => (
+  <svg viewBox="0 0 24 24" width="18" height="18">
+    <path d="M12 3.1c-4.9 0-8.9 3.3-8.9 7.8 0 3 1.8 5.6 4.4 6.6-.1-.6-.2-1.4 0-2l.9-3.8s-.2-.5-.2-1.1c0-1 .6-1.7 1.4-1.7.6 0 1 .4 1 1 0 .6-.4 1.5-.6 2.3-.2.7.4 1.3 1.2 1.3 1.5 0 2.6-1.6 2.6-3.9 0-2-1.5-3.4-3.7-3.4-2.5 0-4 1.9-4 3.9 0 .6.2 1.2.6 1.6.1.1.1.2.1.3-.1.3-.2.9-.3 1.1-.1.2-.2.3-.4.2-1.3-.5-2.1-2-2.1-3.6 0-2.9 2.2-5.6 6.3-5.6 3.3 0 5.8 2.3 5.8 5.4 0 3.2-2.1 5.9-5 5.9-1 0-1.9-.5-2.2-1.1l-.6 2.2c-.2.7-.7 1.6-1.1 2.2.8.3 1.7.4 2.7.4 4.9 0 8.9-3.3 8.9-7.8S16.9 3.1 12 3.1z" fill="currentColor"/>
   </svg>
 );
 
@@ -86,8 +98,8 @@ const Footer = () => (
     <div className="footer__top">
       <div className="footer__top-inner">
         <div className="footer__brand">
-          <h2 style={{ fontSize: '32px', margin: '0 0 16px 0', fontFamily: 'var(--font-heading)' }}>CoupleCotton</h2>
-          <p className="footer__tagline">Made for couples, <br />crafted with love.</p>
+          <h2 className="footer__brand-title">CoupleCotton</h2>
+          <p className="footer__tagline">Made for couples,<br />crafted with love.</p>
         </div>
 
         <AccordionSection title="Company">
@@ -109,7 +121,7 @@ const Footer = () => (
         <AccordionSection title="Information">
           <address className="footer__address">
             <p>3772 Village View Drive, Immokalee, Florida</p>
-            <p><a href="mailto:hello@couplecoton.com">hello@couplecoton.com</a></p>
+            <p><a href="mailto:hello@couplecotton.com">hello@couplecotton.com</a></p>
             <p>+1 888-234-1234 (toll-free)</p>
           </address>
         </AccordionSection>
@@ -118,9 +130,13 @@ const Footer = () => (
       <hr className="footer__divider" />
 
       <div className="footer__ig-row">
-        <div className="footer__ig-label">
-          <p className="footer__ig-title">Follow Us on Instagram</p>
-          <p className="footer__ig-handle">@couplecoton</p>
+        <div className="footer__ig-header">
+          <div className="footer__ig-label">
+            <p className="footer__ig-title">Follow Us on Instagram</p>
+          </div>
+          <a className="footer__ig-handle" href="https://instagram.com/couplecotton" rel="noopener noreferrer">
+            @couplecotton
+          </a>
         </div>
         <div className="footer__ig-grid">
           {IG_IMAGES.map((src, i) => (
@@ -149,6 +165,7 @@ const Footer = () => (
             { href: 'https://x.com/couplecoton', Icon: XIcon, label: 'X' },
             { href: 'https://instagram.com/couplecoton', Icon: IGIcon, label: 'Instagram' },
             { href: 'https://tiktok.com/@couplecoton', Icon: TikTokIcon, label: 'TikTok' },
+            { href: 'https://pinterest.com/couplecotton', Icon: PinterestIcon, label: 'Pinterest' },
           ].map(({ href, Icon, label }) => (
             <li key={label}>
               <motion.a

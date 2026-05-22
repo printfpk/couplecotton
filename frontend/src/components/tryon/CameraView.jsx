@@ -1,380 +1,375 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import useCamera from '../../hooks/useCamera';
 import usePoseDetection from '../../hooks/usePoseDetection';
+import useSegmentation from '../../hooks/useSegmentation';
+import GarmentRenderer from './GarmentRenderer';
 
-/* ─────────────────────────────────────────────────────────────
-   CameraView — PNG garment try-on (scale + position + rotate)
-   
-   Pipeline each frame:
-   1. Draw mirrored video onto canvas (base layer)
-   2. Detect body landmarks
-   3. Compute shirt placement: scale to body width, position
-      collar at neck, rotate to body angle
-   4. Draw shirt image at 85% opacity (body shows through)
-   5. Composite face + neck + forearms + lower body from video
-   ───────────────────────────────────────────────────────────── */
-
-const GARMENT_IMAGES = {
-  'cc-cotton-polo-pair': '/garments/cc-cotton-polo-pair.png',
-  'cc-classic-duo-tee':  '/garments/cc-cotton-polo-pair.png',
+// Instead of one PNG, load layered assets.
+const GARMENT_ASSETS = {
+  'cc-cotton-polo-pair': {
+    torso: '/garments/cc-cotton-polo-pair-torso.png',
+    leftSleeve: '/garments/cc-cotton-polo-pair-lsleeve.png',
+    rightSleeve: '/garments/cc-cotton-polo-pair-rsleeve.png',
+    collar: '/garments/cc-cotton-polo-pair-collar.png'
+  },
+  'cc-classic-duo-tee': {
+    torso: '/garments/cc-cotton-polo-pair-torso.png',
+    leftSleeve: '/garments/cc-cotton-polo-pair-lsleeve.png',
+    rightSleeve: '/garments/cc-cotton-polo-pair-rsleeve.png',
+    collar: '/garments/cc-cotton-polo-pair-collar.png'
+  }
 };
 
-/* ── Where the collar sits in the PNG (normalised 0→1) ──────── 
-   This is the ONLY anchor we need — the collar/neck point.
-   We position the whole image so this point aligns with the 
-   user's neck, and scale the image to match body width.
-   ──────────────────────────────────────────────────────────── */
-const COLLAR_ANCHOR = { x: 0.50, y: 0.08 };
+const drawCapsule = (ctx, p1, p2, radius) => {
+  ctx.beginPath();
+  ctx.arc(p1.x, p1.y, radius, 0, Math.PI * 2);
+  ctx.arc(p2.x, p2.y, radius, 0, Math.PI * 2);
+  const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+  const offsetX = Math.cos(angle + Math.PI/2) * radius;
+  const offsetY = Math.sin(angle + Math.PI/2) * radius;
+  ctx.moveTo(p1.x + offsetX, p1.y + offsetY);
+  ctx.lineTo(p2.x + offsetX, p2.y + offsetY);
+  ctx.lineTo(p2.x - offsetX, p2.y - offsetY);
+  ctx.lineTo(p1.x - offsetX, p1.y - offsetY);
+  ctx.fill();
+};
 
-/* ── Approximate where sleeves end in the PNG (normalised) ──── 
-   Used to compute image "body width" for scaling.
-   Sleeve-to-sleeve span in image = how wide the shirt fabric is.
-   ──────────────────────────────────────────────────────────── */
-const IMG_LEFT_EDGE  = 0.04;  // leftmost sleeve pixel
-const IMG_RIGHT_EDGE = 0.96;  // rightmost sleeve pixel
-const IMG_SHIRT_WIDTH_FRAC = IMG_RIGHT_EDGE - IMG_LEFT_EDGE; // ~0.92
+const CameraView = ({ product }) => {
+  const { videoRef, active: cameraActive, start: startCamera, stop: stopCamera, error: camError } = useCamera();
+  const { ready: poseReady, detect, error: poseError } = usePoseDetection();
+  const { ready: segReady, segment, buildLayerMask, error: segError } = useSegmentation();
 
-/* ── Remove white background ─────────────────────────────────── */
-function removeWhiteBg(img, threshold = 225) {
-  const oc = document.createElement('canvas');
-  oc.width  = img.naturalWidth;
-  oc.height = img.naturalHeight;
-  const c = oc.getContext('2d');
-  c.drawImage(img, 0, 0);
-  const id = c.getImageData(0, 0, oc.width, oc.height);
-  const d  = id.data;
-  for (let i = 0; i < d.length; i += 4) {
-    const r = d[i], g = d[i+1], b = d[i+2];
-    if (r > threshold && g > threshold && b > threshold) {
-      d[i+3] = 0; // transparent
-    }
-  }
-  c.putImageData(id, 0, 0);
-  return oc;
-}
+  const containerRef = useRef(null);
+  const canvasRef = useRef(null);
+  const photoCanvasRef = useRef(null);
+  const occlusionCanvasRef = useRef(null);
+  const animRef = useRef(null);
 
-/* ═══════════════════════════════════════════════════════════════
-   CameraView Component
-   ═══════════════════════════════════════════════════════════════ */
-const CameraView = ({ product, color, showDebug = false }) => {
-  const { videoRef, active: cameraActive, error: camError, start: startCamera } = useCamera();
-  const { ready: poseReady, detect } = usePoseDetection();
+  const [status, setStatus] = useState('idle');
+  const [facingMode, setFacingMode] = useState('user');
+  const [bodyMetrics, setBodyMetrics] = useState(null);
 
-  const containerRef   = useRef(null);
-  const canvasRef      = useRef(null);
-  const animRef        = useRef(null);
-  const lastLmRef      = useRef(null);
-  const shirtCanvasRef = useRef(null);
-  const [shirtReady,   setShirtReady]   = useState(false);
-  const [started,      setStarted]      = useState(false);
-  const [bodyDetected, setBodyDetected] = useState(false);
-  const [status,       setStatus]       = useState('idle');
+  const assets = GARMENT_ASSETS[product?.slug] || GARMENT_ASSETS['cc-cotton-polo-pair'];
 
-  const imgPath = GARMENT_IMAGES[product?.slug] || null;
+  const handleStart = async () => {
+    setStatus('loading');
+    await startCamera(facingMode);
+  };
 
-  /* ── Load & process shirt PNG ── */
-  useEffect(() => {
-    if (!imgPath) return;
-    setShirtReady(false);
-    shirtCanvasRef.current = null;
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      shirtCanvasRef.current = removeWhiteBg(img, 225);
-      setShirtReady(true);
-    };
-    img.onerror = () => console.warn('Shirt PNG failed to load:', imgPath);
-    img.src = imgPath;
-  }, [imgPath]);
-
-  const handleStart = useCallback(async () => {
-    setStarted(true); setStatus('loading');
-    await startCamera('user');
-  }, [startCamera]);
+  const toggleCamera = async () => {
+    const next = facingMode === 'user' ? 'environment' : 'user';
+    setFacingMode(next);
+    stopCamera();
+    setStatus('loading');
+    await startCamera(next);
+  };
 
   useEffect(() => {
-    if (started && cameraActive && poseReady) setStatus('ready');
-    else if (started && cameraActive)         setStatus('loading');
-  }, [started, cameraActive, poseReady]);
-
-  /* ── Draw one composited frame ── */
-  const drawFrame = useCallback((ctx, lm, video, dw, dh) => {
-    ctx.clearRect(0, 0, dw, dh);
-
-    /* ══ LAYER 0: Mirrored video (base) ══════════════════════ */
-    if (video && video.readyState >= 2) {
-      ctx.save();
-      ctx.translate(dw, 0);
-      ctx.scale(-1, 1);
-      ctx.drawImage(video, 0, 0, dw, dh);
-      ctx.restore();
+    if (cameraActive && poseReady && segReady && status === 'loading') {
+      setStatus('live');
     }
+  }, [cameraActive, poseReady, segReady, status]);
 
-    /* ── Landmark extraction ── */
-    const mx   = v => (1 - v) * dw;  // mirror X
-    const py   = v => v * dh;
-    const ls   = lm[11], rs = lm[12]; // shoulders
-    const le   = lm[13], re = lm[14]; // elbows
-    const lw   = lm[15], rw = lm[16]; // wrists
-    const lh   = lm[23], rh = lm[24]; // hips
-    const nose = lm[0];
-    if (!ls || !rs || !lh || !rh) return false;
-
-    const lsX = mx(ls.x), lsY = py(ls.y);
-    const rsX = mx(rs.x), rsY = py(rs.y);
-    const lhX = mx(lh.x), lhY = py(lh.y);
-    const rhX = mx(rh.x), rhY = py(rh.y);
-
-    // Elbows (with fallback)
-    const leX = le ? mx(le.x) : lsX + (lsX - rsX) * 0.7;
-    const leY = le ? py(le.y) : lsY + Math.abs(lhY - lsY) * 0.42;
-    const reX = re ? mx(re.x) : rsX + (rsX - lsX) * 0.7;
-    const reY = re ? py(re.y) : rsY + Math.abs(rhY - rsY) * 0.42;
-
-    // Wrists (with fallback)
-    const lwX = lw ? mx(lw.x) : leX + (leX - lsX) * 0.8;
-    const lwY = lw ? py(lw.y) : leY + Math.abs(leY - lsY) * 0.8;
-    const rwX = rw ? mx(rw.x) : reX + (reX - rsX) * 0.8;
-    const rwY = rw ? py(rw.y) : reY + Math.abs(reY - rsY) * 0.8;
-
-    // Key measurements
-    const sw   = Math.abs(lsX - rsX);          // skeleton shoulder width
-    const smX  = (lsX + rsX) / 2;              // shoulder midpoint X
-    const smY  = (lsY + rsY) / 2;              // shoulder midpoint Y
-    const hmX  = (lhX + rhX) / 2;              // hip midpoint X
-    const hmY  = (lhY + rhY) / 2;              // hip midpoint Y
-    const torsoH = Math.abs(smY - hmY);          // shoulder→hip height
-    const bodyAngle = Math.atan2(rsY - lsY, rsX - lsX); // body tilt
-
-    /* ══ LAYER 1: Shirt image ════════════════════════════════
-       Strategy: scale the whole PNG so the shirt's visible
-       width matches the body width (skeleton + generous padding).
-       
-       The actual body surface is ~60% wider than the skeleton
-       shoulder landmarks. We want the shirt to cover ALL of it.
-       ════════════════════════════════════════════════════════ */
-    if (shirtCanvasRef.current && shirtReady) {
-      const sc = shirtCanvasRef.current;
-      const iw = sc.width, ih = sc.height;
-
-      // Target body width = skeleton shoulders * 2.3
-      // MediaPipe skeleton is MUCH narrower than the actual body surface
-      const targetBodyW = sw * 2.3;
-
-      // The shirt image's fabric spans IMG_SHIRT_WIDTH_FRAC of its width.
-      // Scale so that fabric width = targetBodyW.
-      const scale = targetBodyW / (IMG_SHIRT_WIDTH_FRAC * iw);
-
-      // Scaled dimensions
-      const drawW = iw * scale;
-      const drawH = ih * scale;
-
-      // Where to position: collar maps to base of neck
-      // Neck is well ABOVE the shoulder landmarks
-      const neckX = smX;
-      const neckY = smY - torsoH * 0.22;
-
-      // Collar position in the scaled image
-      const collarScaledX = COLLAR_ANCHOR.x * drawW;
-      const collarScaledY = COLLAR_ANCHOR.y * drawH;
-
-      ctx.save();
-      // Move canvas origin to neck position
-      ctx.translate(neckX, neckY);
-      // Rotate to body angle
-      ctx.rotate(bodyAngle);
-      // Draw shirt so collar aligns with origin
-      ctx.globalAlpha = 0.85;
-      ctx.drawImage(sc, -collarScaledX, -collarScaledY, drawW, drawH);
-      ctx.globalAlpha = 1.0;
-      ctx.restore();
-    }
-
-    /* ══ LAYER 2: Composite — paint real pixels back ═════════
-       Face, neck, forearms, and lower body restored from video.
-       This makes the shirt appear worn, not pasted.
-       ════════════════════════════════════════════════════════ */
-    if (video && video.readyState >= 2) {
-      const composite = (buildPath) => {
-        ctx.save();
-        ctx.beginPath(); buildPath(); ctx.clip();
-        ctx.translate(dw, 0); ctx.scale(-1, 1);
-        ctx.drawImage(video, 0, 0, dw, dh);
-        ctx.restore();
-      };
-
-      // Face + head
-      if (nose) {
-        const fX = mx(nose.x), fY = py(nose.y);
-        const fW = sw * 0.55, fH = sw * 0.75;
-        composite(() => ctx.ellipse(fX, fY - fH * 0.22, fW, fH, 0, 0, Math.PI * 2));
-        // Neck strip
-        composite(() => {
-          const nW = sw * 0.22;
-          ctx.rect(fX - nW, fY + fH * 0.42, nW * 2, sw * 0.40);
-        });
-      }
-
-      // Left forearm + hand
-      const lFW = sw * 0.24;
-      const lFA = Math.atan2(lwY - leY, lwX - leX);
-      const lfx = Math.cos(lFA + Math.PI/2) * lFW;
-      const lfy = Math.sin(lFA + Math.PI/2) * lFW;
-      const lSX = leX - (leX - lsX) * 0.12;
-      const lSY = leY - (leY - lsY) * 0.12;
-      composite(() => {
-        ctx.moveTo(lSX + lfx, lSY + lfy);
-        ctx.lineTo(lwX + lfx * 2.0, lwY + lfy * 2.0);
-        ctx.lineTo(lwX - lfx * 2.0, lwY - lfy * 2.0);
-        ctx.lineTo(lSX - lfx, lSY - lfy);
-      });
-
-      // Right forearm + hand
-      const rFW = sw * 0.24;
-      const rFA = Math.atan2(rwY - reY, rwX - reX);
-      const rfx = Math.cos(rFA + Math.PI/2) * rFW;
-      const rfy = Math.sin(rFA + Math.PI/2) * rFW;
-      const rSX = reX - (reX - rsX) * 0.12;
-      const rSY = reY - (reY - rsY) * 0.12;
-      composite(() => {
-        ctx.moveTo(rSX + rfx, rSY + rfy);
-        ctx.lineTo(rwX + rfx * 2.0, rwY + rfy * 2.0);
-        ctx.lineTo(rwX - rfx * 2.0, rwY - rfy * 2.0);
-        ctx.lineTo(rSX - rfx, rSY - rfy);
-      });
-
-      // Lower body — everything below shirt hem
-      const hemY = hmY + torsoH * 0.30;
-      composite(() => ctx.rect(0, hemY, dw, dh - hemY));
-    }
-
-    /* ══ Debug overlay ═══════════════════════════════════════ */
-    if (showDebug) {
-      ctx.strokeStyle = 'rgba(201,232,107,.85)';
-      ctx.lineWidth = 2;
-      [[11,12],[11,23],[12,24],[23,24],[11,13],[12,14],[13,15],[14,16]].forEach(([a,b]) => {
-        const la=lm[a], lb=lm[b]; if(!la||!lb) return;
-        ctx.beginPath(); ctx.moveTo(mx(la.x),py(la.y)); ctx.lineTo(mx(lb.x),py(lb.y)); ctx.stroke();
-      });
-      [0,11,12,13,14,15,16,23,24].forEach(i => {
-        const p=lm[i]; if(!p) return;
-        ctx.beginPath(); ctx.arc(mx(p.x),py(p.y),4,0,Math.PI*2);
-        ctx.fillStyle='#c9e86b'; ctx.fill();
-      });
-    }
-
-    return true;
-  }, [shirtReady, color, showDebug]);
-
-  /* ── RAF loop ── */
   useEffect(() => {
-    if (!cameraActive || !poseReady) return;
+    if (status !== 'live') return;
+
     const loop = () => {
-      const video = videoRef.current, container = containerRef.current, canvas = canvasRef.current;
-      if (!canvas || !container) { animRef.current = requestAnimationFrame(loop); return; }
-
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const dw  = container.offsetWidth, dh = container.offsetHeight;
-      if (canvas.width !== dw * dpr || canvas.height !== dh * dpr) {
-        canvas.width  = dw * dpr;
-        canvas.height = dh * dpr;
-        canvas.style.width  = `${dw}px`;
-        canvas.style.height = `${dh}px`;
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      if (!canvas || !video || video.readyState < 2) {
+        animRef.current = requestAnimationFrame(loop);
+        return;
       }
+
+      const dw = containerRef.current.offsetWidth;
+      const dh = containerRef.current.offsetHeight;
+      if (canvas.width !== dw) {
+        canvas.width = dw;
+        canvas.height = dh;
+      }
+
       const ctx = canvas.getContext('2d');
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      const lm = detect(video);
-      if (lm) { lastLmRef.current = lm; setBodyDetected(true); setStatus('detecting'); }
-      else    { setBodyDetected(false); setStatus('waiting'); }
-
-      const landmarks = lm || lastLmRef.current;
-      if (landmarks) {
-        drawFrame(ctx, landmarks, video, dw, dh);
-      } else {
-        // No landmarks — still show live camera
-        ctx.clearRect(0, 0, dw, dh);
-        if (video && video.readyState >= 2) {
-          ctx.save();
-          ctx.translate(dw, 0); ctx.scale(-1, 1);
-          ctx.drawImage(video, 0, 0, dw, dh);
-          ctx.restore();
-        }
-      }
-
+      ctx.clearRect(0, 0, dw, dh);
+      ctx.save();
+      if (facingMode === 'user') { ctx.translate(dw, 0); ctx.scale(-1, 1); }
+      
+      ctx.drawImage(video, 0, 0, dw, dh);
+      
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([10, 10]);
+      ctx.strokeRect(dw*0.15, dh*0.2, dw*0.7, dh*0.6);
+      
+      ctx.restore();
       animRef.current = requestAnimationFrame(loop);
     };
+
     loop();
     return () => { if (animRef.current) cancelAnimationFrame(animRef.current); };
-  }, [cameraActive, poseReady, detect, drawFrame]);
+  }, [status, facingMode]);
 
-  /* ── Screenshot ── */
-  const captureScreenshot = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const c = document.createElement('canvas');
-    c.width = canvas.offsetWidth; c.height = canvas.offsetHeight;
-    c.getContext('2d').drawImage(canvas, 0, 0, c.width, c.height);
-    const a = document.createElement('a');
-    a.download = `couplecotton-tryon-${Date.now()}.png`;
-    a.href = c.toDataURL('image/png'); a.click();
-  }, []);
+  const takePhoto = async () => {
+    setStatus('processing');
+    
+    const video = videoRef.current;
+    const dw = containerRef.current.offsetWidth;
+    const dh = containerRef.current.offsetHeight;
+    
+    const photoCanvas = document.createElement('canvas');
+    photoCanvas.width = dw;
+    photoCanvas.height = dh;
+    const pctx = photoCanvas.getContext('2d');
+    
+    pctx.save();
+    if (facingMode === 'user') { pctx.translate(dw, 0); pctx.scale(-1, 1); }
+    pctx.drawImage(video, 0, 0, dw, dh);
+    pctx.restore();
+    
+    photoCanvasRef.current = photoCanvas;
 
-  const statusConfig = {
-    idle:      { dot:'wait', text:'Tap to start camera' },
-    loading:   { dot:'wait', text: poseReady ? 'Starting camera…' : 'Loading AI…' },
-    ready:     { dot:'wait', text:'Stand back — show your full torso' },
-    detecting: { dot:'ok',   text: shirtReady ? 'Trying on — looking great!' : 'Body detected!' },
-    waiting:   { dot:'wait', text:'Step into frame' },
+    setTimeout(() => {
+      generateComposite(photoCanvas, dw, dh);
+    }, 50);
   };
-  const st = statusConfig[status] || statusConfig.idle;
+
+  const generateComposite = (photoCanvas, dw, dh) => {
+    const ctx = canvasRef.current.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    
+    canvasRef.current.width = dw * dpr;
+    canvasRef.current.height = dh * dpr;
+    canvasRef.current.style.width = `${dw}px`;
+    canvasRef.current.style.height = `${dh}px`;
+    
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    
+    photoCanvas.readyState = 2;
+    const detectionResult = detect(photoCanvas);
+    const lm = detectionResult?.landmarks;
+    const wlm = detectionResult?.worldLandmarks;
+    const segData = segment(photoCanvas);
+
+    ctx.drawImage(photoCanvas, 0, 0, dw, dh);
+
+    if (!lm) {
+      alert("No body detected! Please make sure your full torso is visible and try again.");
+      setStatus('live');
+      return;
+    }
+
+    setBodyMetrics({ landmarks: lm, worldLandmarks: wlm });
+
+    drawShadows(ctx, lm, dw, dh); // Updated to use lm instead of anchors
+
+    // The GarmentRenderer component will handle rendering the layered clothes via React state
+    
+    // Step 4: Segmentation Masking
+    if (occlusionCanvasRef.current) {
+      const octx = occlusionCanvasRef.current.getContext('2d');
+      occlusionCanvasRef.current.width = dw * dpr;
+      occlusionCanvasRef.current.height = dh * dpr;
+      occlusionCanvasRef.current.style.width = `${dw}px`;
+      occlusionCanvasRef.current.style.height = `${dh}px`;
+      octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawOcclusions(octx, photoCanvas, lm, segData, dw, dh);
+    }
+    
+    setStatus('result');
+    stopCamera(); 
+  };
+
+  const drawShadows = (ctx, lm, dw, dh) => {
+    if (!lm || !lm[11] || !lm[12] || !lm[23] || !lm[24]) return;
+    
+    ctx.save();
+    ctx.globalCompositeOperation = 'multiply';
+    ctx.filter = 'blur(16px)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+
+    const nx = (lm[11].x + lm[12].x)/2 * dw;
+    const ny = (lm[11].y + lm[12].y)/2 * dh;
+
+    ctx.beginPath(); ctx.arc(nx, ny + 10, 25, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(lm[11].x * dw, lm[11].y * dh + 20, 30, 60, Math.PI/4, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(lm[12].x * dw, lm[12].y * dh + 20, 30, 60, -Math.PI/4, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(lm[23].x * dw + 10, lm[23].y * dh, 20, 80, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(lm[24].x * dw - 10, lm[24].y * dh, 20, 80, 0, 0, Math.PI*2); ctx.fill();
+
+    ctx.restore();
+  };
+
+  const applyLightingAndWrinkles = (cctx, photoCanvas, dw, dh, dpr) => {
+    cctx.globalCompositeOperation = 'overlay';
+    const gradient = cctx.createLinearGradient(0, 0, dw, dh);
+    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
+    gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0)');
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.4)');
+    cctx.fillStyle = gradient;
+    cctx.fillRect(0, 0, dw, dh);
+    cctx.globalCompositeOperation = 'source-over';
+  };
+
+  const drawOcclusions = (ctx, photoCanvas, lm, segData, dw, dh) => {
+    const maskCanvas = document.createElement('canvas');
+    maskCanvas.width = dw; maskCanvas.height = dh;
+    const mctx = maskCanvas.getContext('2d');
+    
+    mctx.fillStyle = 'white';
+    const drawArm = (shoulder, elbow, wrist) => {
+      if (!shoulder || !elbow) return;
+      const s = { x: shoulder.x * dw, y: shoulder.y * dh };
+      const e = { x: elbow.x * dw, y: elbow.y * dh };
+      const sw = Math.abs(lm[11].x - lm[12].x) * dw;
+      const radius = sw * 0.16;
+      
+      const dx = e.x - s.x, dy = e.y - s.y;
+      const len = Math.hypot(dx, dy) || 1;
+      const startP = { x: s.x + (dx/len)*radius*1.2, y: s.y + (dy/len)*radius*1.2 };
+      
+      drawCapsule(mctx, startP, e, radius);
+      if (wrist) {
+        const w = { x: wrist.x * dw, y: wrist.y * dh };
+        drawCapsule(mctx, e, w, radius * 0.7);
+      }
+    };
+
+    drawArm(lm[11], lm[13], lm[15]);
+    drawArm(lm[12], lm[14], lm[16]);
+
+    if (lm[0]) {
+      const sw = Math.abs(lm[11].x - lm[12].x) * dw;
+      mctx.beginPath();
+      mctx.ellipse(lm[0].x * dw, lm[0].y * dh, sw*0.3, sw*0.4, 0, 0, Math.PI*2);
+      mctx.fill();
+    }
+
+    if (segData) {
+      const segMask = buildLayerMask(segData, [1, 2, 3, 4, 5], dw, dh);
+      if (segMask) {
+        mctx.globalCompositeOperation = 'source-in';
+        mctx.drawImage(segMask, 0, 0, dw, dh);
+      }
+    }
+
+    mctx.globalCompositeOperation = 'source-in';
+    mctx.drawImage(photoCanvas, 0, 0, dw, dh);
+
+    ctx.drawImage(maskCanvas, 0, 0, dw, dh);
+  };
+
+  const retakePhoto = async () => {
+    setStatus('loading');
+    await startCamera(facingMode);
+  };
+
+  const getLoadingMessage = () => {
+    if (poseError || segError) return 'Error downloading AI models. Check internet.';
+    if (status === 'processing') return 'Applying AI Fitting & Shadows...';
+    if (!poseReady || !segReady) return 'Downloading AI Models (can take 5-10s)...';
+    if (!cameraActive) return 'Requesting Camera Access...';
+    return 'Starting Camera...';
+  };
 
   return (
-    <div ref={containerRef} className="pdp__tryon-camera">
-      {!started && (
-        <div className="pdp__tryon-prompt">
+    <div ref={containerRef} className="pdp__tryon-camera" style={{ position: 'relative', overflow: 'hidden' }}>
+      
+      {status === 'idle' && (
+        <div className="pdp__tryon-prompt" style={{ zIndex: 10 }}>
           <span className="pdp__tryon-prompt-icon">📷</span>
-          <p>Stand back so your full torso is visible.<br />
-            Try on <strong>{product?.name || 'this item'}</strong> live.</p>
-          <button className="pdp__tryon-start-btn" onClick={handleStart}>Start Camera</button>
+          <p>High-Fidelity Virtual Try-On<br /><strong>Take a static photo for maximum realism.</strong></p>
+          <button className="pdp__tryon-start-btn" onClick={handleStart}>Open Camera</button>
         </div>
       )}
-      {camError === 'camera_denied' && (
-        <div className="pdp__tryon-prompt pdp__tryon-prompt--error">
+
+      {camError && status === 'loading' && (
+        <div className="pdp__tryon-prompt pdp__tryon-prompt--error" style={{ zIndex: 10 }}>
           <span className="pdp__tryon-prompt-icon">🚫</span>
-          <p>Camera access denied.<br />Allow camera in settings and reload.</p>
+          <p>Camera access denied or unavailable.</p>
+          <button className="pdp__tryon-start-btn" onClick={() => setStatus('idle')}>Try Again</button>
         </div>
       )}
-      {started && (!cameraActive || !poseReady) && !camError && (
-        <div className="pdp__tryon-prompt" style={{ background:'rgba(26,46,26,0.95)' }}>
+
+      {(poseError || segError) && status === 'loading' && (
+        <div className="pdp__tryon-prompt pdp__tryon-prompt--error" style={{ zIndex: 10 }}>
+          <span className="pdp__tryon-prompt-icon">⚠️</span>
+          <p>Failed to download AI models. Please check your internet connection.</p>
+          <button className="pdp__tryon-start-btn" onClick={() => window.location.reload()}>Reload Page</button>
+        </div>
+      )}
+
+      {(status === 'loading' || status === 'processing') && !camError && !poseError && !segError && (
+        <div className="pdp__tryon-prompt" style={{ zIndex: 10, background: 'rgba(26,46,26,0.96)' }}>
           <div className="pdp__tryon-spinner" />
-          <p>{poseReady ? 'Accessing camera…' : 'Loading body detection AI…'}<br />
-            <small style={{ opacity:0.5, fontSize:11 }}>First load ~5–8s</small></p>
+          <p style={{ color: 'rgba(255,255,255,0.8)', marginTop: 10 }}>
+            {getLoadingMessage()}
+          </p>
         </div>
       )}
-      {cameraActive && (
-        <div className="pdp__tryon-status">
-          <span className={`pdp__tryon-status-dot pdp__tryon-status-dot--${st.dot}`} />
-          <span className="pdp__tryon-status-text">{st.text}</span>
-        </div>
-      )}
-      {/* Video hidden — used only as pixel source */}
+
       <video ref={videoRef} playsInline muted autoPlay
-        style={{ position:'absolute', width:1, height:1, opacity:0, pointerEvents:'none' }} />
-      {/* Canvas renders everything: video + shirt + compositing */}
+        style={{ position: 'absolute', width: 1, height: 1, opacity: 0, pointerEvents: 'none' }} />
+
+      {/* Base Canvas (Video/Photo + Shadows) */}
       <canvas ref={canvasRef} style={{
-        position:'absolute', top:0, left:0,
-        width:'100%', height:'100%',
-        display: cameraActive ? 'block' : 'none',
-        zIndex: 2,
+        position: 'absolute', top: 0, left: 0,
+        display: (status === 'live' || status === 'result') ? 'block' : 'none',
+        zIndex: 1
       }} />
-      {cameraActive && bodyDetected && (
-        <div className="pdp__tryon-actions">
-          <button className="pdp__tryon-capture-btn" onClick={captureScreenshot}>
-            📷 Capture Look
+
+      {/* 2.5D Layered Garment Renderer */}
+      {status === 'result' && bodyMetrics && containerRef.current && (
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 2 }}>
+          <GarmentRenderer
+            assets={assets}
+            bodyMetrics={bodyMetrics}
+            videoWidth={containerRef.current.offsetWidth}
+            videoHeight={containerRef.current.offsetHeight}
+          />
+        </div>
+      )}
+
+      {/* Occlusion Canvas (Foreground Arms/Head) */}
+      <canvas ref={occlusionCanvasRef} style={{
+        position: 'absolute', top: 0, left: 0,
+        display: (status === 'live' || status === 'result') ? 'block' : 'none',
+        zIndex: 3,
+        pointerEvents: 'none'
+      }} />
+
+      {status === 'live' && (
+        <>
+          <div style={{ position: 'absolute', top: 20, width: '100%', textAlign: 'center', zIndex: 10 }}>
+            <span style={{ background: 'rgba(0,0,0,0.6)', padding: '6px 12px', borderRadius: 20, color: 'white', fontSize: 13 }}>
+              Align your torso in the frame
+            </span>
+          </div>
+          <div className="pdp__tryon-actions" style={{ zIndex: 10, bottom: 30, justifyContent: 'center' }}>
+            <button onClick={toggleCamera} style={{ background: 'rgba(0,0,0,0.5)', border: 'none', borderRadius: '50%', width: 50, height: 50, fontSize: 20, color: 'white', marginRight: 20 }}>🔄</button>
+            <button onClick={takePhoto} style={{
+              width: 70, height: 70, borderRadius: '50%', background: 'white',
+              border: '4px solid #c9e86b', cursor: 'pointer', boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+            }} aria-label="Take Photo" />
+            <div style={{ width: 70 }} />
+          </div>
+        </>
+      )}
+
+      {status === 'result' && (
+        <div className="pdp__tryon-actions" style={{ zIndex: 10, bottom: 30, justifyContent: 'center', gap: 15 }}>
+          <button className="pdp__tryon-start-btn" onClick={retakePhoto} style={{ background: 'rgba(0,0,0,0.6)', width: 'auto', padding: '10px 20px' }}>
+            Retake Photo
+          </button>
+          <button className="pdp__tryon-capture-btn" onClick={() => {
+            const a = document.createElement('a');
+            a.download = `my-fit-${Date.now()}.png`;
+            a.href = canvasRef.current.toDataURL('image/png'); 
+            a.click();
+          }} style={{ width: 'auto', padding: '10px 20px' }}>
+            Save Look ✨
           </button>
         </div>
       )}
+
     </div>
   );
 };

@@ -3,7 +3,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   width: 100%;
-  background: #fff;
+  background: #0b2a1b;
+  min-height: 680px;
 }
 
 @media (max-width: 768px) {
@@ -13,7 +14,7 @@
 /* ── Image panel ──────────────────────── */
 .ts__media {
   position: relative;
-  aspect-ratio: 0.947;
+  aspect-ratio: 0.95;
   overflow: hidden;
 }
 
@@ -39,21 +40,23 @@
 /* Product overlay card */
 .ts__product {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #f5f3ee;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  background: rgba(245, 243, 238, 0.92);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
-  gap: 0.9rem;
-  padding: 0.9rem 1.2rem;
+  gap: 0.85rem;
+  padding: 0.8rem 1rem;
+  border-radius: 16px;
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.18);
 }
 
 .ts__product-img {
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
   object-fit: contain;
-  border-radius: 8px;
+  border-radius: 10px;
   flex-shrink: 0;
 }
 
@@ -66,7 +69,7 @@
 }
 
 .ts__product-name {
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #1a2e1a;
   text-decoration: none;
@@ -76,49 +79,52 @@
 }
 
 .ts__product-price {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: #6b7a6b;
 }
 
 .ts__product-btn {
   flex-shrink: 0;
-  background: #1e3b2a;
-  color: #fff;
-  padding: 0.45rem 1.1rem;
+  background: #e3f6a4;
+  color: #1b3426;
+  padding: 0.4rem 1.05rem;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   text-decoration: none;
   transition: background 0.15s;
 }
 
-.ts__product-btn:hover { background: #2d5a3f; }
+.ts__product-btn:hover { background: #d4ef8a; }
 
 /* ── Content panel ──────────────────────── */
 .ts__content {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding: clamp(4rem, 5.8vw, 6rem) clamp(2rem, 5.8vw, 6rem) 4rem;
-  gap: 0;
+  justify-content: center;
+  padding: clamp(3.8rem, 6vw, 6.4rem) clamp(2.4rem, 6vw, 6.6rem);
+  gap: 0.6rem;
+  color: #f8f5ef;
+  text-align: center;
+  position: relative;
 }
 
 .ts__supertitle {
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: #6b7a6b;
-  margin: 0 0 clamp(2rem, 3vw, 3.2rem) 0;
-  font-weight: 500;
+  color: rgba(255, 255, 255, 0.78);
+  margin: 0 0 clamp(1.6rem, 3vw, 2.6rem) 0;
+  font-weight: 600;
 }
 
 .ts__quote {
-  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
-  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.7rem, 3.2vw, 2.7rem);
+  font-family: var(--font-heading--family);
   font-weight: 400;
-  color: #1a2e1a;
+  color: #f8f5ef;
   line-height: 1.3;
-  margin: 0 0 clamp(3.2rem, 3vw, 4rem) 0;
+  margin: 0 0 clamp(2.6rem, 3vw, 3.8rem) 0;
   border: none;
   padding: 0;
   animation: tsFade 0.5s ease;
@@ -133,13 +139,14 @@
 .ts__author {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: clamp(3.2rem, 4vw, 6rem);
+  gap: 0.9rem;
+  justify-content: center;
+  margin-bottom: clamp(2.4rem, 4vw, 4.8rem);
 }
 
 .ts__avatar {
-  width: 64px;
-  height: 64px;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
@@ -152,51 +159,54 @@
 }
 
 .ts__author-name {
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 600;
-  color: #1a2e1a;
+  color: #f8f5ef;
 }
 
 .ts__verify {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.8rem;
-  color: #6b7a6b;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .ts__verify-icon {
   width: 14px;
   height: 14px;
-  color: #1e3b2a;
+  color: #e3f6a4;
 }
 
 /* Controls */
 .ts__controls {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1.1rem;
+  position: absolute;
+  right: clamp(1.6rem, 4vw, 3.2rem);
+  bottom: clamp(1.6rem, 4vw, 2.6rem);
 }
 
 .ts__counter {
-  font-size: 0.78rem;
-  color: #9aaa9a;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
   letter-spacing: 0.06em;
   white-space: nowrap;
 }
 
 .ts__progress {
-  flex: 1;
+  width: 160px;
   height: 2px;
-  background: #e5e7e5;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 999px;
   overflow: hidden;
 }
 
 .ts__progress-bar {
   height: 100%;
-  background: #1e3b2a;
+  background: #ffffff;
   border-radius: 999px;
   transition: width 0.5s ease;
 }
@@ -210,20 +220,49 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1.5px solid #d0d8d0;
+  border: 1px solid rgba(255, 255, 255, 0.6);
   background: transparent;
-  color: #1a2e1a;
+  color: #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
 .ts__arrow:hover {
-  background: #1e3b2a;
-  border-color: #1e3b2a;
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.8);
   color: #fff;
 }
 
 .ts__arrow svg { width: 16px; height: 16px; }
+
+@media (max-width: 980px) {
+  .ts {
+    grid-template-columns: 1fr;
+  }
+  .ts__content {
+    text-align: left;
+    align-items: flex-start;
+  }
+  .ts__author {
+    justify-content: flex-start;
+  }
+  .ts__controls {
+    position: static;
+    margin-top: 1.8rem;
+  }
+  .ts__progress {
+    flex: 1;
+    width: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .ts__product {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  }
+}

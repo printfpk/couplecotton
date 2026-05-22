@@ -473,14 +473,15 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MOBILE TRY-ON — Full-width camera, large touch targets,
-   safe-area insets for iPhone notch
+   MOBILE TRY-ON — Beautiful UI & Layout
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   /* Camera: 4:3 on mobile (portrait fills more screen) */
   .pdp__tryon-camera {
     aspect-ratio: 3 / 4;
-    border-radius: 0;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
   }
 
   /* Start button — large enough to tap easily */
@@ -492,26 +493,65 @@
     max-width: 280px;
   }
 
-  /* Status badge — bigger text on small screen */
+  /* Status badge — move to top-left corner out of the face */
   .pdp__tryon-status {
+    top: 16px;
+    left: 16px;
+    transform: none;
     font-size: 13px;
-    padding: 7px 14px;
+    padding: 8px 16px;
+    background: rgba(0,0,0,0.4);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   }
 
-  /* Capture button — thumb-friendly position */
+  /* Capture button container — placed safely at bottom center */
   .pdp__tryon-actions {
-    bottom: max(16px, env(safe-area-inset-bottom, 16px));
+    bottom: max(24px, env(safe-area-inset-bottom, 24px));
     left: 50%;
     transform: translateX(-50%);
     right: auto;
     width: max-content;
   }
 
+  /* Modern Camera Shutter Button */
   .pdp__tryon-capture-btn {
-    min-height: 48px;
-    font-size: 15px;
-    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 56px;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 32px;
+    background: #c9e86b;
+    color: #1a2e1a;
+    box-shadow: 0 8px 24px rgba(201, 232, 107, 0.4);
+    border: 3px solid #fff;
     white-space: nowrap;
+    border-radius: 999px;
+  }
+  .pdp__tryon-capture-btn:active {
+    transform: scale(0.96);
+  }
+
+  /* Camera flip button */
+  .pdp__tryon-flip-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(30, 59, 42, 0.85);
+    backdrop-filter: blur(8px);
+    border: 2px solid rgba(255,255,255,0.2);
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .pdp__tryon-flip-btn:active {
+    transform: scale(0.96);
   }
 
   /* Prompt text */

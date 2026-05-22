@@ -5,9 +5,30 @@ import './CustomSection1.css';
 const CDN = '/assets';
 
 const CARDS = [
-  { img: 'https://loremflickr.com/832/1200/couple,clothing?lock=54', imgM: 'https://loremflickr.com/640/800/couple,clothing?lock=54', badge: 'Everyday Essentials', title: 'Casual couple basics', href: '/collections/matching-tees', prodImg: 'https://loremflickr.com/300/400/clothing?lock=11' },
-  { img: 'https://loremflickr.com/832/1200/couple,clothing?lock=55', imgM: 'https://loremflickr.com/640/800/couple,clothing?lock=55', badge: 'Date Night', title: 'Dress to impress together', href: '/collections/date-night', prodImg: 'https://loremflickr.com/300/400/clothing?lock=21' },
-  { img: 'https://loremflickr.com/832/1200/couple,clothing?lock=56', imgM: 'https://loremflickr.com/640/800/couple,clothing?lock=56', badge: 'Cozy & Comfort', title: 'Lounge sets for two', href: '/collections/lounge-sets', prodImg: 'https://loremflickr.com/300/400/clothing?lock=23' },
+  {
+    img: `${CDN}/collection-with-bg-1.webp`,
+    imgM: `${CDN}/collection-with-bg-1-m.webp`,
+    badge: 'Nutrient Support',
+    title: 'Support metabolic balance',
+    href: '/collections/all',
+    prodImg: `${CDN}/DailyVitalitySoftgels1597881482.webp`,
+  },
+  {
+    img: `${CDN}/collection-with-bg-2-new.webp`,
+    imgM: `${CDN}/collection-with-bg-2-m-new.webp`,
+    badge: 'Immune Defense',
+    title: 'Strengthen natural immunity',
+    href: '/collections/all',
+    prodImg: `${CDN}/DailySkinSynbiotic1.webp`,
+  },
+  {
+    img: `${CDN}/collection-with-bg-3.webp`,
+    imgM: `${CDN}/collection-with-bg-3-m.webp`,
+    badge: 'Mind & Focus',
+    title: 'Promote cognitive health',
+    href: '/collections/all',
+    prodImg: `${CDN}/DailyOmegaComplex1597881476.webp`,
+  },
 ];
 
 const CustomSection1 = () => (
@@ -20,11 +41,11 @@ const CustomSection1 = () => (
         viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
-        <p className="cs1__subheading">Collections</p>
-        <h2 className="cs1__heading">Crafted for couples who match</h2>
+        <p className="cs1__subheading">Formulations</p>
+        <h2 className="cs1__heading">Science-backed formulations</h2>
         <p className="cs1__body">
-          Our curated collections bring together premium fabrics and{' '}
-          thoughtful design to create matching outfits you'll both love.
+          Our targeted blends combine research-backed ingredients with thoughtful formulation to support lasting vitality
+          and balance.
         </p>
       </motion.div>
 

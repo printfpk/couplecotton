@@ -7,6 +7,7 @@ import morgan from 'morgan';
 import connectDB from './config/db.js';
 import errorHandler from './middleware/errorHandler.js';
 import productRoutes from './routes/products.js';
+import tryOnRoutes from './routes/tryon.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,6 +27,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use('/api/products', productRoutes);
+app.use('/api/tryon', tryOnRoutes);
 
 // ─── Error Handler ──────────────────────────────────────────────────
 app.use(errorHandler);

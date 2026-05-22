@@ -7,25 +7,89 @@ const CDN = '/assets';
 
 /* ── Product data ─────────────────────────────────────────────── */
 const BEST_SELLERS = [
-  { name: 'Classic Duo Tee', type: 'Couple Set', badge: 'Sale', href: '/products/cc-classic-duo-tee', img1: 'https://loremflickr.com/600/800/clothing?lock=11', img2: 'https://loremflickr.com/600/800/clothing?lock=12', price: '$50.00', compareAt: '$110.00' },
-  { name: 'Weekend Hoodie Set', type: 'Couple Set', badge: null, href: '/products/cc-weekend-hoodie-set', img1: 'https://loremflickr.com/600/800/clothing?lock=13', img2: 'https://loremflickr.com/600/800/clothing?lock=14', price: '$54.00', compareAt: null },
-  { name: 'Linen Couple Shirt', type: 'Matching Set', badge: null, href: '/products/cc-linen-couple-shirt', img1: 'https://loremflickr.com/600/800/clothing?lock=15', img2: 'https://loremflickr.com/600/800/clothing?lock=16', price: '$48.00', compareAt: null },
-  { name: 'Matching Jogger Set', type: 'Duo Pack', badge: 'Sale', href: '/products/cc-matching-jogger-set', img1: 'https://loremflickr.com/600/800/clothing?lock=17', img2: 'https://loremflickr.com/600/800/clothing?lock=18', price: '$46.00', compareAt: '$92.00' },
-  { name: 'Cotton Polo Pair', type: 'Couple Set', badge: null, href: '/products/cc-cotton-polo-pair', img1: 'https://loremflickr.com/600/800/clothing?lock=19', img2: 'https://loremflickr.com/600/800/clothing?lock=20', price: '$52.00', compareAt: null },
-  { name: 'Date Night Dress Set', type: 'Matching Set', badge: null, href: '/products/cc-date-night-dress-set', img1: 'https://loremflickr.com/600/800/clothing?lock=21', img2: 'https://loremflickr.com/600/800/clothing?lock=22', price: '$49.00', compareAt: null },
-  { name: 'Cozy Lounge Set', type: 'Matching Set', badge: null, href: '/products/cc-cozy-lounge-set', img1: 'https://loremflickr.com/600/800/clothing?lock=23', img2: 'https://loremflickr.com/600/800/clothing?lock=24', price: '$51.00', compareAt: null },
-  { name: 'Summer Short Set', type: 'Matching Set', badge: 'Sale', href: '/products/cc-summer-short-set', img1: 'https://loremflickr.com/600/800/clothing?lock=25', img2: 'https://loremflickr.com/600/800/clothing?lock=26', price: '$45.00', compareAt: '$90.00' },
+  {
+    name: 'Skin Synbiotic',
+    type: 'Vitamin',
+    badge: 'Sale',
+    href: '/products/skin-synbiotic',
+    img1: `${CDN}/DailySkinSynbiotic1.webp`,
+    img2: `${CDN}/DailySkinSynbiotic2.webp`,
+    price: '$50.00',
+    compareAt: '$110.00',
+  },
+  {
+    name: 'Enduro Fuel',
+    type: 'Vitamin',
+    badge: null,
+    href: '/products/enduro-fuel',
+    img1: `${CDN}/WellinaEnduroFuel1597881502.webp`,
+    img2: `${CDN}/WellinaEnduroFuel1597881503.webp`,
+    price: '$54.00',
+    compareAt: null,
+  },
+  {
+    name: 'Pure Balance',
+    type: 'Vitamin',
+    badge: 'Best Sellers',
+    href: '/products/pure-balance',
+    img1: `${CDN}/WellinaPureBalance1597881490.webp`,
+    img2: `${CDN}/WellinaPureBalance1597881491.webp`,
+    price: '$48.00',
+    compareAt: null,
+  },
+  {
+    name: 'Omega Complex',
+    type: 'Vitamin',
+    badge: null,
+    href: '/products/omega-complex',
+    img1: `${CDN}/DailyOmegaComplex1597881476.webp`,
+    img2: `${CDN}/DailyOmegaComplex1597881477.webp`,
+    price: '$49.00',
+    compareAt: null,
+  },
 ];
 
 const NEW_ARRIVALS = [
-  { name: 'Striped Duo Tee', type: 'Matching Set', badge: 'New', href: '/products/cc-striped-duo-tee', img1: 'https://loremflickr.com/600/800/clothing?lock=27', img2: 'https://loremflickr.com/600/800/clothing?lock=28', price: '$44.00', compareAt: null },
-  { name: 'Flannel Couple Set', type: 'Matching Set', badge: 'New', href: '/products/cc-flannel-couple-set', img1: 'https://loremflickr.com/600/800/clothing?lock=29', img2: 'https://loremflickr.com/600/800/clothing?lock=30', price: '$53.00', compareAt: null },
-  { name: 'Graphic Tee Pair', type: 'Couple Set', badge: 'New', href: '/products/cc-graphic-tee-pair', img1: 'https://loremflickr.com/600/800/clothing?lock=31', img2: 'https://loremflickr.com/600/800/clothing?lock=32', price: '$58.00', compareAt: null },
-  { name: 'Satin PJ Set', type: 'Couple Set', badge: 'New', href: '/products/cc-satin-pj-set', img1: 'https://loremflickr.com/600/800/clothing?lock=33', img2: 'https://loremflickr.com/600/800/clothing?lock=34', price: '$62.00', compareAt: null },
-  { name: 'Denim Jacket Duo', type: 'Matching Set', badge: 'Sale', href: '/products/cc-denim-jacket-duo', img1: 'https://loremflickr.com/600/800/clothing?lock=35', img2: 'https://loremflickr.com/600/800/clothing?lock=36', price: '$47.00', compareAt: '$94.00' },
-  { name: 'Bomber Jacket Pair', type: 'Couple Set', badge: 'New', href: '/products/cc-bomber-jacket-pair', img1: 'https://loremflickr.com/600/800/clothing?lock=37', img2: 'https://loremflickr.com/600/800/clothing?lock=38', price: '$42.00', compareAt: null },
-  { name: 'Varsity Couple Set', type: 'Matching Set', badge: 'New', href: '/products/cc-varsity-couple-set', img1: 'https://loremflickr.com/600/800/clothing?lock=39', img2: 'https://loremflickr.com/600/800/clothing?lock=40', price: '$46.00', compareAt: null },
-  { name: 'Silk Pajama Pair', type: 'Matching Set', badge: 'New', href: '/products/cc-silk-pajama-pair', img1: 'https://loremflickr.com/600/800/clothing?lock=41', img2: 'https://loremflickr.com/600/800/clothing?lock=42', price: '$44.00', compareAt: null },
+  {
+    name: 'Detox Support',
+    type: 'Vitamin',
+    badge: 'New',
+    href: '/products/detox-support',
+    img1: `${CDN}/DailyDetoxSupport1597881463.webp`,
+    img2: `${CDN}/DailyDetoxSupport1597881464.webp`,
+    price: '$52.00',
+    compareAt: null,
+  },
+  {
+    name: 'Metabolism Boost',
+    type: 'Vitamin',
+    badge: 'New',
+    href: '/products/metabolism-boost',
+    img1: `${CDN}/DailyMetabolismBoost1597881470.webp`,
+    img2: `${CDN}/DailyMetabolismBoost1597881471.webp`,
+    price: '$56.00',
+    compareAt: null,
+  },
+  {
+    name: 'Vitality Softgels',
+    type: 'Vitamin',
+    badge: null,
+    href: '/products/vitality-softgels',
+    img1: `${CDN}/DailyVitalitySoftgels1597881482.webp`,
+    img2: `${CDN}/DailyVitalitySoftgels1597881482.webp`,
+    price: '$47.00',
+    compareAt: null,
+  },
+  {
+    name: 'Plant Protein',
+    type: 'Vitamin',
+    badge: 'New',
+    href: '/products/plant-protein',
+    img1: `${CDN}/WellinaPlantProtein1597881526.webp`,
+    img2: `${CDN}/WellinaPlantProtein1597881527.webp`,
+    price: '$58.00',
+    compareAt: null,
+  },
 ];
 
 const TABS = [
@@ -48,6 +112,14 @@ const cardVariants = {
   exit:   { opacity: 0, y: -16, transition: { duration: 0.25 } },
 };
 
+const CartIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <path d="M16 10a4 4 0 0 1-8 0" />
+  </svg>
+);
+
 /* ── Individual product card ──────────────────────────────────── */
 const ProductCard = ({ product }) => {
   const [hovered, setHovered] = useState(false);
@@ -63,7 +135,11 @@ const ProductCard = ({ product }) => {
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
     >
       {badge && (
-        <span className={`ptabs__badge ptabs__badge--${badge.toLowerCase()}`}>{badge}</span>
+        <span
+          className={`ptabs__badge ptabs__badge--${badge.toLowerCase().replace(/\s+/g, '-')}`}
+        >
+          {badge}
+        </span>
       )}
 
       <Link to={href} className="ptabs__card-img-link" tabIndex="-1" aria-hidden="true">
@@ -86,8 +162,8 @@ const ProductCard = ({ product }) => {
         </div>
       </div>
 
-      <Link to={href} className="ptabs__quick-add">
-        Choose options →
+      <Link to={href} className="ptabs__quick-add" aria-label={`Add ${name} to cart`}>
+        <CartIcon />
       </Link>
     </motion.div>
   );
@@ -109,7 +185,7 @@ const ProductTabs = () => {
       <div className="ptabs__container">
         {/* Header row */}
         <div className="ptabs__header">
-          <h2 className="ptabs__heading">Find your perfect match</h2>
+          <h2 className="ptabs__heading">Find your supplement</h2>
           <div className="ptabs__tab-nav" role="tablist">
             {TABS.map(t => (
               <button

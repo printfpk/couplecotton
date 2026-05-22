@@ -1,9 +1,8 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 
-const CDN = '/assets';
 const m = (n) => `https://loremflickr.com/150/150/clothing?lock=${n}`;
 // Logo replaced with text
 
@@ -103,6 +102,29 @@ const FEATURES_ITEMS = [
   { label: 'Product Flash Sale',arrow: false, href: '/pages/flash-sale' },
 ];
 
+const MOBILE_SECTIONS = [
+  {
+    key: 'shop',
+    label: 'Shop',
+    links: SHOP_CATS.map((cat) => ({ label: cat.label, href: cat.href })),
+  },
+  {
+    key: 'collections',
+    label: 'Collections',
+    links: COL_COLUMNS.flatMap((col) => col.links),
+  },
+  {
+    key: 'pages',
+    label: 'Pages',
+    links: PAGES_LINKS,
+  },
+  {
+    key: 'features',
+    label: 'Features',
+    links: FEATURES_ITEMS.map((item) => ({ label: item.label, href: item.href })),
+  },
+];
+
 // ── SVG helpers ─────────────────────────────────────────────
 const CaretDown = () => (
   <svg className="nb__caret" viewBox="0 0 20 20" fill="none">
@@ -126,6 +148,24 @@ const IconCart = () => (
     <line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
   </svg>
 );
+const IconMenu = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <line x1="3" y1="12" x2="21" y2="12" />
+    <line x1="3" y1="18" x2="21" y2="18" />
+  </svg>
+);
+const IconClose = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+const IconChevron = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 6l6 6-6 6" />
+  </svg>
+);
 
 // ── Mega menu animation variants ────────────────────────────
 const megaVariants = {
@@ -139,10 +179,39 @@ const itemVariants = {
   visible: (i) => ({ opacity: 1, y: 0, transition: { delay: i * 0.04, duration: 0.25, ease: 'easeOut' } }),
 };
 
+const mobileOverlayVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.2 } },
+  exit: { opacity: 0, transition: { duration: 0.2 } },
+};
+
+const mobilePanelVariants = {
+  hidden: { opacity: 0, y: -14, scale: 0.98 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1], when: 'beforeChildren', staggerChildren: 0.05 },
+  },
+  exit: { opacity: 0, y: -10, scale: 0.98, transition: { duration: 0.2 } },
+};
+
+const mobileItemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut' } },
+};
+
+const mobileListVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.05, delayChildren: 0.05 } },
+};
+
 // ══════════════════════════════════════════════════════════════
 const Navbar = ({ onSearchOpen, onCartOpen }) => {
   const [activeMenu, setActiveMenu] = useState(null);
   const [shopCat, setShopCat]       = useState('for-him');
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSection, setMobileSection] = useState(null);
   const timerRef                    = useRef(null);
 
   const open  = useCallback((menu) => { clearTimeout(timerRef.current); setActiveMenu(menu); }, []);
@@ -152,11 +221,56 @@ const Navbar = ({ onSearchOpen, onCartOpen }) => {
 
   const currentShopCat = SHOP_CATS.find(c => c.key === shopCat) || SHOP_CATS[0];
 
+  const handleSearchOpen = useCallback(() => {
+    if (onSearchOpen) onSearchOpen();
+  }, [onSearchOpen]);
+
+  const openMobile = useCallback(() => {
+    setActiveMenu(null);
+    setMobileOpen(true);
+  }, []);
+
+  const closeMobile = useCallback(() => {
+    setMobileOpen(false);
+    setMobileSection(null);
+  }, []);
+
+  const toggleMobileSection = useCallback((key) => {
+    setMobileSection((prev) => (prev === key ? null : key));
+  }, []);
+
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+    const onKey = (event) => {
+      if (event.key === 'Escape') closeMobile();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [mobileOpen, closeMobile]);
+
   return (
     <nav className="nb" role="navigation">
       {/* ── TOP BAR ───────────────────────────────────────── */}
       <div className="nb__bar">
         <div className="nb__left">
+          <button
+            className="nb__mobile-toggle"
+            type="button"
+            aria-label="Open menu"
+            aria-expanded={mobileOpen}
+            onClick={openMobile}
+          >
+            <IconMenu />
+          </button>
           {/* SHOP */}
           <div className={`nb__item${activeMenu === 'shop' ? ' nb__item--open' : ''}`}
             onMouseEnter={() => open('shop')} onMouseLeave={close}>
@@ -212,19 +326,112 @@ const Navbar = ({ onSearchOpen, onCartOpen }) => {
 
         {/* Center logo */}
         <div className="nb__logo">
-          <a href="/" onClick={stop} style={{ textDecoration: 'none', color: '#ffffff', fontSize: '24px', fontWeight: 'bold', fontFamily: 'var(--font-heading)' }}>
+          <a href="/" onClick={stop} className="nb__logo-link">
             CoupleCotton
           </a>
         </div>
 
         {/* Right icons */}
         <div className="nb__right">
-          <Link to="/try-on" className="nb__tryon-btn">✨ Try On 3D</Link>
-          <button className="nb__icon-btn" aria-label="Search" onClick={onSearchOpen}><IconSearch /></button>
+          <button className="nb__search-pill" type="button" onClick={handleSearchOpen} aria-label="Open search">
+            <span className="nb__search-text">What are you looking for?</span>
+            <span className="nb__search-icon"><IconSearch /></span>
+          </button>
+          <Link to="/try-on" className="nb__tryon-btn">Try On 3D</Link>
           <button className="nb__icon-btn" aria-label="Account"><IconUser /></button>
           <button className="nb__icon-btn" aria-label="Cart" onClick={onCartOpen}><IconCart /></button>
         </div>
       </div>
+
+      {/* ── MOBILE MENU ───────────────────────────────── */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            className="nb__mobile-overlay"
+            variants={mobileOverlayVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            onClick={closeMobile}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile menu"
+          >
+            <motion.div
+              className="nb__mobile-panel"
+              variants={mobilePanelVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="nb__mobile-header">
+                <span className="nb__mobile-logo">CoupleCotton</span>
+                <button className="nb__mobile-close" type="button" aria-label="Close menu" onClick={closeMobile}>
+                  <IconClose />
+                </button>
+              </div>
+
+              <motion.div className="nb__mobile-list" variants={mobileListVariants}>
+                {MOBILE_SECTIONS.map((section) => (
+                  <motion.div
+                    key={section.key}
+                    className="nb__mobile-section"
+                    variants={mobileItemVariants}
+                  >
+                    <button
+                      className="nb__mobile-section-btn"
+                      type="button"
+                      aria-expanded={mobileSection === section.key}
+                      onClick={() => toggleMobileSection(section.key)}
+                    >
+                      <span>{section.label}</span>
+                      <span className={`nb__mobile-chevron${mobileSection === section.key ? ' is-open' : ''}`}>
+                        <IconChevron />
+                      </span>
+                    </button>
+
+                    <AnimatePresence initial={false}>
+                      {mobileSection === section.key && (
+                        <motion.div
+                          className="nb__mobile-links"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: 'easeOut' }}
+                        >
+                          {section.links.map((lnk) => (
+                            <a
+                              key={`${section.key}-${lnk.label}`}
+                              href={lnk.href}
+                              onClick={(e) => {
+                                stop(e);
+                                closeMobile();
+                              }}
+                              className="nb__mobile-link"
+                            >
+                              {lnk.label}
+                            </a>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              <div className="nb__mobile-footer">
+                <Link to="/try-on" className="nb__mobile-cta" onClick={closeMobile}>
+                  Try On 3D
+                </Link>
+                <button className="nb__mobile-action" type="button">
+                  Sign In / Register
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── SHOP MEGA MENU ──────────────────────────────── */}
       <AnimatePresence>

@@ -1,0 +1,52 @@
+.collection-page {
+  padding: clamp(5rem, 8vw, 9rem) 0 clamp(4rem, 6vw, 6rem);
+  background: #fff;
+}
+
+.collection-page__container {
+  gap: clamp(2rem, 4vw, 3rem);
+}
+
+.collection-page__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.collection-page__eyebrow {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: #889487;
+  margin: 0 0 0.6rem;
+  font-weight: 600;
+}
+
+.collection-page__heading {
+  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  font-weight: 400;
+  color: #1b3426;
+  margin: 0;
+  font-family: var(--font-heading--family);
+}
+
+.collection-page__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.3rem;
+  border-radius: 999px;
+  border: 1px solid #d8ded7;
+  color: #1b3426;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.collection-page__back:hover {
+  background: #1e3b2a;
+  color: #fff;
+}

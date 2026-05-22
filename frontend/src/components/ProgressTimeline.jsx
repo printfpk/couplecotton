@@ -31,6 +31,8 @@ const HeartIcon = () => (
   </svg>
 );
 
+const BADGE_TEXT = 'CoupleCotton - Style that matches - ';
+
 const ProgressTimeline = () => (
   <section className="pt">
     <div className="pt__container">
@@ -83,9 +85,15 @@ const ProgressTimeline = () => (
           <div className="pt__media-inner">
             {/* Spinning badge */}
             <div className="pt__spin-badge">
-              <div className="pt__spin-text" aria-hidden="true">
-                {'CoupleCotton - Style that matches - '.split('').map((ch, i) => (
-                  <span key={i} style={{ '--char-id': i }}>{ch}</span>
+              <div
+                className="pt__spin-text"
+                aria-hidden="true"
+                style={{ '--char-total': BADGE_TEXT.length }}
+              >
+                {BADGE_TEXT.split('').map((ch, i) => (
+                  <span key={`${ch}-${i}`} style={{ '--char-id': i }}>
+                    {ch}
+                  </span>
                 ))}
               </div>
               <div className="pt__spin-icon">

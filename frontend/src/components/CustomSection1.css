@@ -17,27 +17,31 @@
 }
 
 .cs1__subheading {
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: #6b7a6b;
+  color: #1b3426;
   margin: 0 0 0.8rem 0;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .cs1__heading {
-  font-size: clamp(1.8rem, 3.5vw, 3rem);
-  font-weight: 600;
-  color: #1a2e1a;
+  font-size: clamp(2.2rem, 4.8vw, 3.8rem);
+  font-weight: 400;
+  color: #1b3426;
   margin: 0 0 0.8rem 0;
   line-height: 1.2;
+  font-family: var(--font-heading--family);
 }
 
 .cs1__body {
   font-size: 0.95rem;
-  color: #6b7a6b;
+  color: #7b8577;
   margin: 0;
   line-height: 1.6;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Grid */
@@ -54,10 +58,11 @@
 /* Card */
 .cs1__card {
   position: relative;
-  border-radius: 20px;
+  border-radius: 22px;
   overflow: hidden;
-  aspect-ratio: 0.867;
-  background: #2d4a38;
+  aspect-ratio: 0.95;
+  background: #1e3b2a;
+  box-shadow: 0 20px 40px rgba(14, 31, 22, 0.2);
 }
 
 .cs1__card-picture {
@@ -79,7 +84,12 @@
 .cs1__card-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.2);
+  background: linear-gradient(
+    120deg,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.18) 45%,
+    rgba(0, 0, 0, 0.02) 100%
+  );
   transition: background 0.3s;
 }
 
@@ -92,12 +102,12 @@
   position: absolute;
   bottom: 1.2rem;
   right: 1.2rem;
-  width: clamp(5rem, 8vw, 7rem);
-  height: clamp(5rem, 8vw, 7rem);
-  border-radius: 10px;
+  width: clamp(4rem, 7vw, 5.5rem);
+  height: clamp(4rem, 7vw, 5.5rem);
+  border-radius: 14px;
   overflow: hidden;
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(8px);
+  background: #ffffff;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
 }
 
 .cs1__card-badge-img {
@@ -112,7 +122,7 @@
   top: 0;
   left: 0;
   right: 0;
-  padding: 1.5rem 1.5rem 0;
+  padding: 2rem 2rem 0;
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
@@ -120,45 +130,50 @@
 
 .cs1__card-tag {
   display: inline-block;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(4px);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(6px);
   color: #fff;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.25rem 0.7rem;
+  padding: 0.3rem 0.75rem;
   border-radius: 999px;
   align-self: flex-start;
 }
 
 .cs1__card-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-family: var(--font-heading--family);
+  font-size: clamp(1.5rem, 2.7vw, 2.2rem);
   font-weight: 400;
   color: #fff;
   margin: 0;
-  line-height: 1.25;
+  line-height: 1.2;
   max-width: 16ch;
 }
 
 .cs1__card-btn {
   display: inline-block;
-  background: rgba(255,255,255,0.18);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.35);
-  color: #fff;
-  padding: 0.55rem 1.4rem;
+  background: #e3f6a4;
+  border: 1px solid transparent;
+  color: #1b3426;
+  padding: 0.55rem 1.5rem;
   border-radius: 999px;
   font-size: 0.85rem;
   font-weight: 600;
   text-decoration: none;
   align-self: flex-start;
-  transition: background 0.18s, border-color 0.18s;
+  transition: background 0.18s, border-color 0.18s, transform 0.18s;
   margin-top: 0.4rem;
 }
 
 .cs1__card-btn:hover {
-  background: rgba(201, 232, 107, 0.3);
-  border-color: #c9e86b;
+  background: #d4ef8a;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+  .cs1__card {
+    aspect-ratio: 1.1;
+  }
 }

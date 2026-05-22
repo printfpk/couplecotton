@@ -162,12 +162,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  --spin-radius: 32px;
+  overflow: hidden;
 }
 
 .pt__spin-text {
   position: absolute;
   inset: 0;
   animation: spin 12s linear infinite;
+  transform-origin: 50% 50%;
+  will-change: transform;
 }
 
 @keyframes spin {
@@ -181,9 +185,15 @@
   font-size: 0.55rem;
   font-weight: 500;
   color: #1a2e1a;
-  transform-origin: 0 -36px;
-  transform: translateX(-50%) translateY(-100%)
-    rotate(calc(var(--char-id) * (360deg / 39)));
+  --char-angle: calc(var(--char-id) * (360deg / var(--char-total)));
+  transform-origin: 0 0;
+  transform: rotate(var(--char-angle)) translateY(calc(-1 * var(--spin-radius)));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pt__spin-text {
+    animation: none;
+  }
 }
 
 .pt__spin-icon {
