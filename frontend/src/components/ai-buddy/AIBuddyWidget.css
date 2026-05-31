@@ -1,0 +1,248 @@
+/* ── AI Widget Container ─────────────────────────── */
+.ai-widget-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.ai-widget-controls,
+.ai-widget-active-pill {
+  pointer-events: auto;
+}
+
+/* ── Controls Row ────────────────────────────────── */
+.ai-widget-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* ── Reset Button ────────────────────────────────── */
+.ai-widget-reset-btn {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #718096;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-widget-reset-btn:hover {
+  background: #fff;
+  color: #1a2e1a;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.ai-widget-reset-btn:active {
+  transform: translateY(0);
+}
+
+/* ── FAB Button ──────────────────────────────────── */
+.ai-widget-fab {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a2e1a, #2d4a2d);
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow:
+    0 8px 32px rgba(26, 46, 26, 0.35),
+    0 2px 8px rgba(26, 46, 26, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: visible;
+}
+
+.ai-widget-fab:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2a4a2a, #3d6a3d);
+  box-shadow:
+    0 12px 40px rgba(26, 46, 26, 0.4),
+    0 4px 12px rgba(26, 46, 26, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* ── Listening State ─────────────────────────────── */
+.ai-widget-fab.listening {
+  background: linear-gradient(135deg, #e53e3e, #fc5c65);
+  box-shadow:
+    0 8px 32px rgba(229, 62, 62, 0.4),
+    0 2px 8px rgba(229, 62, 62, 0.25);
+  animation: fab-breathe 2s ease-in-out infinite;
+}
+
+@keyframes fab-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* ── Speaking State ──────────────────────────────── */
+.ai-widget-fab.speaking {
+  background: linear-gradient(135deg, #6b46c1, #9f7aea);
+  box-shadow:
+    0 8px 32px rgba(107, 70, 193, 0.4),
+    0 2px 8px rgba(107, 70, 193, 0.25);
+  animation: fab-breathe 2s ease-in-out infinite;
+}
+
+/* ── Processing State ────────────────────────────── */
+.ai-widget-fab.processing {
+  background: linear-gradient(135deg, #4a5568, #718096);
+  cursor: not-allowed;
+  box-shadow:
+    0 6px 24px rgba(74, 85, 104, 0.3),
+    0 2px 6px rgba(74, 85, 104, 0.15);
+}
+
+/* ── Animated Pulse Rings ────────────────────────── */
+.ai-fab-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ai-widget-fab.listening .ai-fab-ring {
+  border-color: rgba(229, 62, 62, 0.5);
+}
+
+.ai-widget-fab.speaking .ai-fab-ring {
+  border-color: rgba(107, 70, 193, 0.5);
+}
+
+.ai-fab-ring--1 {
+  animation: ring-expand 2s ease-out infinite;
+}
+
+.ai-fab-ring--2 {
+  animation: ring-expand 2s ease-out 0.8s infinite;
+}
+
+@keyframes ring-expand {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* ── Spinner ─────────────────────────────────────── */
+.ai-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Active Pill (Transcript / Status) ───────────── */
+.ai-widget-active-pill {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 12px 20px;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 320px;
+  min-width: 160px;
+}
+
+.ai-widget-active-pill.speaking {
+  background: rgba(246, 240, 255, 0.95);
+  box-shadow:
+    0 8px 40px rgba(107, 70, 193, 0.12),
+    0 2px 8px rgba(107, 70, 193, 0.06),
+    inset 0 0 0 1px rgba(107, 70, 193, 0.08);
+}
+
+/* ── Sound Wave Bars ─────────────────────────────── */
+.ai-widget-wave {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.ai-bar {
+  width: 3.5px;
+  background: linear-gradient(180deg, #1a2e1a, #3d6a3d);
+  border-radius: 3px;
+  min-height: 5px;
+}
+
+.ai-widget-active-pill.speaking .ai-bar {
+  background: linear-gradient(180deg, #6b46c1, #b794f4);
+}
+
+/* ── Status Text ─────────────────────────────────── */
+.ai-widget-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #2d3748;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+/* ── Mobile Adjustments ──────────────────────────── */
+@media (max-width: 480px) {
+  .ai-widget-container {
+    bottom: 1.2rem;
+    right: 1.2rem;
+  }
+
+  .ai-widget-fab {
+    width: 56px;
+    height: 56px;
+  }
+
+  .ai-widget-active-pill {
+    max-width: 260px;
+    padding: 10px 16px;
+  }
+
+  .ai-widget-text {
+    font-size: 0.82rem;
+  }
+}

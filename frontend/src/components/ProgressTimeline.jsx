@@ -102,14 +102,14 @@ const ProgressTimeline = () => (
             </div>
 
             <img
-              src={`${CDN}/progress-2.webp?v=1772674164&width=1200`}
-              alt="Skin progress"
+              src="https://ik.imagekit.io/printf/couplecotton/cotton01mob%20-%20Copy.png"
+              alt="Couple in matching outfits"
               className="pt__img-main"
               loading="lazy"
             />
             <img
-              src={`${CDN}/progress-1.webp?v=1772674164&width=780`}
-              alt="Progress"
+              src="https://ik.imagekit.io/printf/couplecotton/couplecotton03.png"
+              alt="Couple style details"
               className="pt__img-secondary"
               loading="lazy"
             />

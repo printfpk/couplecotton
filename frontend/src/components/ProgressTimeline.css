@@ -41,10 +41,6 @@
   align-items: start;
 }
 
-@media (max-width: 900px) {
-  .pt__body { grid-template-columns: 1fr; gap: 3.2rem; }
-}
-
 /* ── STEPS ─────────────────────────────────── */
 .pt__steps {
   display: flex;
@@ -220,21 +216,64 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.85rem 2rem;
-  background: #1e3b2a;
-  color: #fff;
+  background: #e3f6a4;
+  color: #1b3426;
   border-radius: 999px;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   font-weight: 600;
   text-decoration: none;
   transition: background 0.18s, transform 0.15s;
 }
 
 .pt__cta:hover {
-  background: #2d5a3f;
+  background: #d4ef8a;
   transform: translateY(-1px);
 }
 
 .pt__cta-icon {
   width: 18px;
   height: 18px;
+  background: #000;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px;
+}
+
+@media (max-width: 900px) {
+  .pt__body { 
+    display: flex;
+    flex-direction: column-reverse; 
+    gap: 4rem; 
+  }
+  .pt__steps {
+    padding-left: 0;
+  }
+  .pt__media {
+    position: static;
+    width: 100%;
+  }
+  .pt__media-inner {
+    margin: 2rem 0;
+  }
+  .pt__img-main {
+    left: 0;
+    right: auto;
+    width: 85%;
+  }
+  .pt__img-secondary {
+    right: 0;
+    left: auto;
+    width: 45%;
+    bottom: -2rem;
+  }
+  .pt__spin-badge {
+    left: auto;
+    right: 0%;
+    top: -30px;
+    width: 110px;
+    height: 110px;
+    background: #e3f6a4;
+    --spin-radius: 40px;
+    overflow: visible;
+  }
 }

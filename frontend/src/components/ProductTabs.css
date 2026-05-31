@@ -69,8 +69,26 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 @media (max-width: 1199px) { .ptabs__grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 767px)  { .ptabs__grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 479px)  { .ptabs__grid { grid-template-columns: 1fr; } }
+@media (max-width: 767px)  {
+  .ptabs__grid { 
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 1rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .ptabs__grid::-webkit-scrollbar {
+    display: none;
+  }
+  .ptabs__card {
+    flex: 0 0 65%;
+    scroll-snap-align: start;
+  }
+}
+@media (max-width: 479px)  { 
+  .ptabs__card { flex: 0 0 80%; } 
+}
 
 /* ── Product card ─────────────────────────────────────────── */
 .ptabs__card {

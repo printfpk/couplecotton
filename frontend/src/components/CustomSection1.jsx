@@ -6,28 +6,25 @@ const CDN = '/assets';
 
 const CARDS = [
   {
-    img: `${CDN}/collection-with-bg-1.webp`,
-    imgM: `${CDN}/collection-with-bg-1-m.webp`,
-    badge: 'Nutrient Support',
-    title: 'Support metabolic balance',
+    img: 'https://ik.imagekit.io/printf/couplecotton/couplecotton01.png',
+    imgM: 'https://ik.imagekit.io/printf/couplecotton/cotton01mob%20-%20Copy.png',
+    badge: 'Streetwear',
+    title: 'Urban matching sets',
     href: '/collections/all',
-    prodImg: `${CDN}/DailyVitalitySoftgels1597881482.webp`,
   },
   {
-    img: `${CDN}/collection-with-bg-2-new.webp`,
-    imgM: `${CDN}/collection-with-bg-2-m-new.webp`,
-    badge: 'Immune Defense',
-    title: 'Strengthen natural immunity',
+    img: 'https://ik.imagekit.io/printf/couplecotton/couplecotton02.png',
+    imgM: 'https://ik.imagekit.io/printf/couplecotton/ChatGPT%20Image%20May%2031,%202026,%2001_28_38%20AM.png',
+    badge: 'Lounge Wear',
+    title: 'Cozy indoor essentials',
     href: '/collections/all',
-    prodImg: `${CDN}/DailySkinSynbiotic1.webp`,
   },
   {
-    img: `${CDN}/collection-with-bg-3.webp`,
-    imgM: `${CDN}/collection-with-bg-3-m.webp`,
-    badge: 'Mind & Focus',
-    title: 'Promote cognitive health',
+    img: 'https://ik.imagekit.io/printf/couplecotton/couplecotton03.png',
+    imgM: 'https://ik.imagekit.io/printf/couplecotton/ChatGPT%20Image%20May%2031,%202026,%2001_30_47%20AM.png',
+    badge: 'Travel & Outdoors',
+    title: 'Explore together',
     href: '/collections/all',
-    prodImg: `${CDN}/DailyOmegaComplex1597881476.webp`,
   },
 ];
 
@@ -41,16 +38,15 @@ const CustomSection1 = () => (
         viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
-        <p className="cs1__subheading">Formulations</p>
-        <h2 className="cs1__heading">Science-backed formulations</h2>
+        <p className="cs1__subheading">Our Collections</p>
+        <h2 className="cs1__heading">Matching Couple Styles</h2>
         <p className="cs1__body">
-          Our targeted blends combine research-backed ingredients with thoughtful formulation to support lasting vitality
-          and balance.
+          Our matching sets combine premium cotton with thoughtful designs to keep you both comfortable and stylish, wherever you go.
         </p>
       </motion.div>
 
       <div className="cs1__grid">
-        {CARDS.map(({ img, imgM, badge, title, href, prodImg }, i) => (
+        {CARDS.map(({ img, imgM, badge, title, href }, i) => (
           <motion.div
             key={badge}
             className="cs1__card"
@@ -65,9 +61,7 @@ const CustomSection1 = () => (
               <img src={img} alt={title} className="cs1__card-img" loading="lazy" />
             </picture>
             <div className="cs1__card-overlay" aria-hidden="true" />
-            <div className="cs1__card-badge">
-              <img src={prodImg} alt="" className="cs1__card-badge-img" loading="lazy" />
-            </div>
+            
             <div className="cs1__card-content">
               <span className="cs1__card-tag">{badge}</span>
               <h3 className="cs1__card-title">{title}</h3>

@@ -1,0 +1,24 @@
+{
+  "headers": {
+    "host": "localhost:5000",
+    "connection": "keep-alive",
+    "sec-ch-ua-platform": "\"iOS\"",
+    "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMTcwZjk0NjI4MGUwYmQxNGI2ZGY3YyIsInVzZXJuYW1lIjoidGVzdDEyMyIsImVtYWlsIjoicHJpbnRmcGtAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3Nzk5MDQxNTksImV4cCI6MTc3OTk5MDU1OX0.5RgQE25FMKMSL1XPMtrdgZRpBCLgpz_Kbofm7ksLjio",
+    "user-agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1",
+    "sec-ch-ua": "\"Chromium\";v=\"148\", \"Google Chrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+    "dnt": "1",
+    "sec-ch-ua-mobile": "?1",
+    "accept": "*/*",
+    "origin": "http://localhost:5173",
+    "sec-fetch-site": "same-site",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-dest": "empty",
+    "referer": "http://localhost:5173/",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "en-US,en;q=0.9",
+    "cookie": "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMTcwZjk0NjI4MGUwYmQxNGI2ZGY3YyIsInVzZXJuYW1lIjoidGVzdDEyMyIsImVtYWlsIjoicHJpbnRmcGtAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3Nzk5MDQxNTksImV4cCI6MTc3OTk5MDU1OX0.5RgQE25FMKMSL1XPMtrdgZRpBCLgpz_Kbofm7ksLjio"
+  },
+  "cookies": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMTcwZjk0NjI4MGUwYmQxNGI2ZGY3YyIsInVzZXJuYW1lIjoidGVzdDEyMyIsImVtYWlsIjoicHJpbnRmcGtAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3Nzk5MDQxNTksImV4cCI6MTc3OTk5MDU1OX0.5RgQE25FMKMSL1XPMtrdgZRpBCLgpz_Kbofm7ksLjio"
+  }
+}

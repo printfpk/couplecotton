@@ -1,11 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useCameraView from './CameraView';
 import GarmentPicker from './GarmentPicker';
 import './TryOnPage.css';
 
-/* ── Static product data (works without backend) ─────────── */
-const PRODUCTS = [
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+/* ── Fallback product data (used when backend is unavailable) ── */
+const FALLBACK_PRODUCTS = [
   {
     _id: '1', name: 'Cotton Polo Pair', slug: 'cc-cotton-polo-pair', type: 'Couple Set',
     price: 52, images: ['https://loremflickr.com/600/800/clothing?lock=19'],
@@ -13,42 +15,43 @@ const PRODUCTS = [
     colors: [{ name: 'Navy', hex: '#1B2A4A' }, { name: 'White', hex: '#F5F5F0' }, { name: 'Olive', hex: '#556B2F' }],
     garmentMeta: { category: 'top' },
   },
-  {
-    _id: '2', name: 'Linen Couple Shirt', slug: 'cc-linen-couple-shirt', type: 'Matching Set',
-    price: 48, images: ['https://loremflickr.com/600/800/clothing?lock=21'],
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: [{ name: 'Sky Blue', hex: '#87CEEB' }, { name: 'Beige', hex: '#D4C5A0' }],
-    garmentMeta: { category: 'top' },
-  },
-  {
-    _id: '3', name: 'Summer Short Set', slug: 'cc-summer-short-set', type: 'Matching Set',
-    price: 45, images: ['https://loremflickr.com/600/800/clothing?lock=23'],
-    sizes: ['S', 'M', 'L', 'XL', '2XL'],
-    colors: [{ name: 'Black', hex: '#1A1A1A' }, { name: 'Terracotta', hex: '#CC6B49' }],
-    garmentMeta: { category: 'full-body' },
-  },
-  {
-    _id: '4', name: 'Matching Hoodie Duo', slug: 'cc-matching-hoodie-duo', type: 'Couple Set',
-    price: 68, compareAt: 85, images: ['https://loremflickr.com/600/800/hoodie?lock=1'],
-    sizes: ['S', 'M', 'L', 'XL', '2XL'],
-    colors: [{ name: 'Charcoal', hex: '#36454F' }, { name: 'Blush Pink', hex: '#DE6FA1' }, { name: 'Forest', hex: '#228B22' }],
-    garmentMeta: { category: 'top' },
-  },
-  {
-    _id: '5', name: 'Couple Graphic Tee', slug: 'cc-couple-graphic-tee', type: 'Couple Set',
-    price: 35, images: ['https://loremflickr.com/600/800/tshirt?lock=5'],
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    colors: [{ name: 'White', hex: '#F5F5F0' }, { name: 'Black', hex: '#1A1A1A' }],
-    garmentMeta: { category: 'top' },
-  },
 ];
 
 const TryOnPage = ({ onBack }) => {
-  const [selectedProduct, setSelectedProduct] = useState(PRODUCTS[0]);
-  const [selectedColor, setSelectedColor] = useState(PRODUCTS[0].colors[0]);
+  const [products, setProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState('M');
   const [cameraStarted, setCameraStarted] = useState(false);
   const [status, setStatus] = useState('idle'); // idle | loading | ready | detecting | waiting | error
+
+  /* Fetch real products from backend */
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setProductsLoading(true);
+        const res = await fetch(`${API_BASE}/api/products`);
+        const json = await res.json();
+        if (json.success && json.data?.length > 0) {
+          setProducts(json.data);
+          setSelectedProduct(json.data[0]);
+          setSelectedColor(json.data[0].colors?.[0] || null);
+        } else {
+          setProducts(FALLBACK_PRODUCTS);
+          setSelectedProduct(FALLBACK_PRODUCTS[0]);
+          setSelectedColor(FALLBACK_PRODUCTS[0].colors?.[0] || null);
+        }
+      } catch {
+        setProducts(FALLBACK_PRODUCTS);
+        setSelectedProduct(FALLBACK_PRODUCTS[0]);
+        setSelectedColor(FALLBACK_PRODUCTS[0].colors?.[0] || null);
+      } finally {
+        setProductsLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const {
     videoRef,
@@ -112,10 +115,10 @@ const TryOnPage = ({ onBack }) => {
 
         {/* Garment Picker */}
         <GarmentPicker
-          products={PRODUCTS}
+          products={products}
           selected={selectedProduct}
           onSelect={handleProductSelect}
-          loading={false}
+          loading={productsLoading}
         />
 
         {/* Color & Size */}

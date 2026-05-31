@@ -1,101 +1,130 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import connectDB from './config/db.js';
-import Product from './models/Product.js';
+import productModel from './product/models/product.model.js';
 
 await connectDB();
 
-// ─── Seed Products ──────────────────────────────────────────────────
 const products = [
   {
-    name: 'Cotton Polo Pair',
+    title: 'Cotton Polo Pair',
     slug: 'cc-cotton-polo-pair',
-    type: 'Couple Set',
     description: 'Classic cotton polo in matching his & hers cuts. Breathable, timeless, and perfect for casual outings.',
-    price: 52.00,
-    images: ['https://loremflickr.com/600/800/clothing?lock=19', 'https://loremflickr.com/600/800/clothing?lock=20'],
-    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
-    colors: [
-      { name: 'Navy', hex: '#1B2A4A' },
-      { name: 'White', hex: '#FFFFFF' },
-      { name: 'Olive', hex: '#556B2F' },
+    shortDescription: 'Classic matching couple polo shirts.',
+    price: { amount: 5200, currency: 'INR', discountPercentage: 10 },
+    gender: 'unisex',
+    category: 'tshirt',
+    pairGroupId: 'polo-pair-01',
+    fashion: {
+        color: 'Navy',
+        style: 'casual',
+        fit: 'regular',
+        occasion: 'daily',
+        season: 'summer',
+        fabric: 'cotton'
+    },
+    business: {
+        brand: 'CoupleCotton',
+        sizes: ['XS', 'S', 'M', 'L', 'XL'],
+        stock: 50,
+        sku: 'CC-POLO-001',
+        isFeatured: true,
+        isTrending: true
+    },
+    images: [
+        { url: 'https://loremflickr.com/600/800/clothing?lock=19' }, 
+        { url: 'https://loremflickr.com/600/800/clothing?lock=20' }
     ],
-    garmentMeta: { category: 'top' },
-    isFeatured: true,
+    tags: ['polo', 'cotton', 'summer', 'couple'],
     isActive: true,
   },
   {
-    name: 'Linen Couple Shirt',
-    slug: 'cc-linen-couple-shirt',
-    type: 'Matching Set',
-    description: 'Lightweight linen shirts designed for couples. Relaxed fit with matching embroidered details.',
-    price: 48.00,
-    images: ['https://loremflickr.com/600/800/clothing?lock=21', 'https://loremflickr.com/600/800/clothing?lock=22'],
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: [
-      { name: 'Sky Blue', hex: '#87CEEB' },
-      { name: 'Beige', hex: '#F5E6CC' },
-    ],
-    garmentMeta: { category: 'top' },
-    isFeatured: true,
+    title: 'Linen Couple Shirt - Him',
+    slug: 'cc-linen-couple-shirt-him',
+    description: 'Lightweight linen shirt designed for him. Relaxed fit.',
+    shortDescription: 'Lightweight linen shirt.',
+    price: { amount: 4800, currency: 'INR' },
+    gender: 'male',
+    category: 'shirt',
+    pairGroupId: 'linen-set-01',
+    fashion: {
+        color: 'Sky Blue',
+        style: 'korean',
+        fit: 'relaxed',
+        occasion: 'daily',
+        season: 'summer',
+        fabric: 'linen'
+    },
+    business: {
+        brand: 'CoupleCotton',
+        sizes: ['S', 'M', 'L', 'XL'],
+        stock: 30,
+        isFeatured: true
+    },
+    images: [{ url: 'https://loremflickr.com/600/800/clothing?lock=21' }],
+    tags: ['linen', 'shirt', 'korean'],
     isActive: true,
   },
   {
-    name: 'Summer Short Set',
-    slug: 'cc-summer-short-set',
-    type: 'Matching Set',
-    description: 'Matching couple shorts set with breathable cotton blend. Perfect for beach days and summer vibes.',
-    price: 45.00,
-    images: ['https://loremflickr.com/600/800/clothing?lock=23', 'https://loremflickr.com/600/800/clothing?lock=24'],
-    sizes: ['S', 'M', 'L', 'XL', '2XL'],
-    colors: [
-      { name: 'Black', hex: '#1A1A1A' },
-      { name: 'Terracotta', hex: '#CC6B49' },
-    ],
-    garmentMeta: { category: 'full-body' },
-    isFeatured: true,
+    title: 'Linen Couple Shirt - Her',
+    slug: 'cc-linen-couple-shirt-her',
+    description: 'Lightweight linen shirt designed for her. Relaxed fit with matching details.',
+    shortDescription: 'Lightweight linen shirt.',
+    price: { amount: 4800, currency: 'INR' },
+    gender: 'female',
+    category: 'shirt',
+    pairGroupId: 'linen-set-01',
+    fashion: {
+        color: 'Sky Blue',
+        style: 'korean',
+        fit: 'relaxed',
+        occasion: 'daily',
+        season: 'summer',
+        fabric: 'linen'
+    },
+    business: {
+        brand: 'CoupleCotton',
+        sizes: ['S', 'M', 'L', 'XL'],
+        stock: 30,
+        isFeatured: true
+    },
+    images: [{ url: 'https://loremflickr.com/600/800/clothing?lock=22' }],
+    tags: ['linen', 'shirt', 'korean'],
     isActive: true,
   },
   {
-    name: 'Matching Hoodie Duo',
+    title: 'Matching Hoodie Duo',
     slug: 'cc-matching-hoodie-duo',
-    type: 'Couple Set',
     description: 'Cozy couple hoodies with matching embroidery. Oversized fit for ultimate comfort.',
-    price: 68.00,
-    compareAt: 85.00,
-    images: ['https://loremflickr.com/600/800/hoodie?lock=1', 'https://loremflickr.com/600/800/hoodie?lock=2'],
-    sizes: ['S', 'M', 'L', 'XL', '2XL'],
-    colors: [
-      { name: 'Charcoal', hex: '#36454F' },
-      { name: 'Blush Pink', hex: '#DE6FA1' },
-      { name: 'Forest', hex: '#228B22' },
-    ],
-    garmentMeta: { category: 'top' },
-    isFeatured: false,
+    shortDescription: 'Cozy oversized hoodies.',
+    price: { amount: 6800, currency: 'INR', discountPercentage: 20 },
+    gender: 'unisex',
+    category: 'hoodie',
+    pairGroupId: 'hoodie-duo-01',
+    fashion: {
+        color: 'Charcoal',
+        style: 'streetwear',
+        fit: 'oversized',
+        occasion: 'lounge',
+        season: 'winter',
+        fabric: 'fleece'
+    },
+    business: {
+        brand: 'CoupleCotton',
+        sizes: ['S', 'M', 'L', 'XL', '2XL'],
+        stock: 100,
+        isFeatured: false,
+        isTrending: true
+    },
+    images: [{ url: 'https://loremflickr.com/600/800/hoodie?lock=1' }],
+    tags: ['hoodie', 'winter', 'oversized', 'streetwear'],
     isActive: true,
-  },
-  {
-    name: 'Couple Graphic Tee',
-    slug: 'cc-couple-graphic-tee',
-    type: 'Couple Set',
-    description: 'Fun couple graphic tees with complementary designs. Soft ring-spun cotton.',
-    price: 35.00,
-    images: ['https://loremflickr.com/600/800/tshirt?lock=5', 'https://loremflickr.com/600/800/tshirt?lock=6'],
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    colors: [
-      { name: 'White', hex: '#FFFFFF' },
-      { name: 'Black', hex: '#1A1A1A' },
-    ],
-    garmentMeta: { category: 'top' },
-    isFeatured: false,
-    isActive: true,
-  },
+  }
 ];
 
-// ─── Run Seed ───────────────────────────────────────────────────────
 try {
-  await Product.deleteMany({});
-  const inserted = await Product.insertMany(products);
+  await productModel.deleteMany({});
+  const inserted = await productModel.insertMany(products);
   console.log(`✅ Seeded ${inserted.length} products`);
 } catch (err) {
   console.error('❌ Seed error:', err);

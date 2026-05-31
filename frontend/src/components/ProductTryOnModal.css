@@ -1,0 +1,686 @@
+/* ═══════════════════════════════════════════════════════════════
+   ProductTryOnModal.css — AI Virtual Try-On Modal
+   CoupleCotton green/earthy design language
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Overlay ─────────────────────────────────────────────────── */
+.pto-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* ── Modal Container ─────────────────────────────────────────── */
+.pto-modal {
+  width: 100%;
+  max-width: 960px;
+  max-height: 90vh;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+.pto-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 28px;
+  border-bottom: 1px solid #eae6de;
+  background: linear-gradient(180deg, #f8f6f1 0%, #fff 100%);
+}
+
+.pto-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pto-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #8a6d3b;
+}
+
+.pto-title {
+  font-family: 'Playfair Display', 'Instrument Serif', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a2e1a;
+  margin: 0;
+}
+
+.pto-close {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e8e4dc;
+  border-radius: 50%;
+  background: #fff;
+  color: #6b7c6b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pto-close:hover {
+  background: #f5f3ef;
+  color: #1a2e1a;
+  border-color: #c4bfb3;
+}
+
+/* ── Body ────────────────────────────────────────────────────── */
+.pto-body {
+  display: grid;
+  grid-template-columns: 1fr 260px 1fr;
+  gap: 0;
+  padding: 24px 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ── Section ─────────────────────────────────────────────────── */
+.pto-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.pto-section--person {
+  padding-right: 20px;
+}
+
+.pto-section--garment {
+  padding: 0 20px;
+  border-left: 1px solid #eae6de;
+  border-right: 1px solid #eae6de;
+  min-width: 200px;
+}
+
+.pto-section--result {
+  padding-left: 20px;
+}
+
+.pto-section-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7c6b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pto-step-num {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #1e3b2a;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── Capture Area ────────────────────────────────────────────── */
+.pto-capture-area {
+  flex: 1;
+  min-height: 280px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f5f3ef;
+  border: 2px dashed #d4cfc5;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pto-file-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Prompt (initial state) ──────────────────────────────────── */
+.pto-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  text-align: center;
+}
+
+.pto-prompt-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.pto-prompt-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border: 1.5px solid #d4cfc5;
+  border-radius: 14px;
+  background: #fff;
+  color: #1a2e1a;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: inherit;
+  min-width: 200px;
+  justify-content: center;
+}
+.pto-prompt-btn:hover {
+  border-color: #1e3b2a;
+  background: #f0f7f0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(30, 59, 42, 0.1);
+}
+
+.pto-prompt-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 0 16px;
+}
+.pto-prompt-divider::before,
+.pto-prompt-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #d4cfc5;
+}
+.pto-prompt-divider span {
+  font-size: 12px;
+  color: #8a9a8a;
+  font-weight: 500;
+}
+
+.pto-prompt-hint {
+  font-size: 12px;
+  color: #8a9a8a;
+  margin: 0;
+}
+
+/* ── Camera View ─────────────────────────────────────────────── */
+.pto-camera-view {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+}
+
+.pto-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pto-camera-controls {
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  z-index: 5;
+}
+
+.pto-cam-btn {
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.pto-cam-btn--flip {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+}
+.pto-cam-btn--flip:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.pto-cam-btn--shutter {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 3px solid #c9e86b !important;
+}
+.pto-cam-btn--shutter:hover {
+  transform: scale(1.08);
+}
+.pto-cam-btn--shutter:active {
+  transform: scale(0.95);
+}
+
+.pto-shutter-inner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #ddd;
+  transition: background 0.15s;
+}
+.pto-cam-btn--shutter:hover .pto-shutter-inner {
+  background: #f0f0f0;
+}
+
+.pto-camera-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+}
+
+/* ── Preview ─────────────────────────────────────────────────── */
+.pto-preview-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f3ef;
+}
+
+.pto-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pto-retake-btn {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.pto-retake-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* ── Garment Card ────────────────────────────────────────────── */
+.pto-garment-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  background: #faf8f4;
+  border: 1.5px solid #e8e4dc;
+  border-radius: 16px;
+  position: relative;
+}
+
+.pto-garment-img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #eae6de;
+}
+
+.pto-garment-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pto-garment-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a2e1a;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pto-garment-price {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e6b3a;
+}
+
+.pto-garment-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #1e3b2a;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* ── Result Area ─────────────────────────────────────────────── */
+.pto-result-area {
+  flex: 1;
+  min-height: 280px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f5f3ef;
+  border: 2px solid #eae6de;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pto-result-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 30px;
+  text-align: center;
+}
+
+.pto-result-placeholder-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #eae6de;
+  font-size: 24px;
+}
+
+.pto-result-placeholder p {
+  font-size: 13px;
+  color: #8a9a8a;
+  margin: 0;
+  max-width: 180px;
+  line-height: 1.5;
+}
+
+/* ── Generating State ────────────────────────────────────────── */
+.pto-generating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 30px;
+}
+
+.pto-generating-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e3b2a;
+}
+
+.pto-generating-sub {
+  font-size: 12px;
+  color: #8a9a8a;
+}
+
+/* ── Result Image ────────────────────────────────────────────── */
+.pto-result-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pto-result-img {
+  width: 100%;
+  flex: 1;
+  object-fit: contain;
+  background: #f5f3ef;
+}
+
+.pto-result-actions {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  border-top: 1px solid #eae6de;
+}
+
+.pto-result-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: #1e3b2a;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.pto-result-btn:hover {
+  background: #2d4a38;
+}
+
+.pto-result-btn--secondary {
+  background: #f0eeea;
+  color: #1a2e1a;
+  border: 1px solid #d4cfc5;
+}
+.pto-result-btn--secondary:hover {
+  background: #e8e4dc;
+}
+
+/* ── Spinner ─────────────────────────────────────────────────── */
+.pto-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(30, 59, 42, 0.15);
+  border-top-color: #1e3b2a;
+  border-radius: 50%;
+  animation: pto-spin 0.8s linear infinite;
+}
+
+.pto-spinner--large {
+  width: 44px;
+  height: 44px;
+  border-width: 3px;
+  border-color: rgba(201, 232, 107, 0.2);
+  border-top-color: #c9e86b;
+}
+
+@keyframes pto-spin {
+  to { transform: rotate(360deg); }
+}
+
+.pto-btn-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: pto-spin 0.8s linear infinite;
+}
+
+/* ── Error ────────────────────────────────────────────────────── */
+.pto-error {
+  margin: 0 28px;
+  padding: 10px 16px;
+  background: #fdf2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.pto-footer {
+  padding: 16px 28px 20px;
+  border-top: 1px solid #eae6de;
+  display: flex;
+  justify-content: center;
+}
+
+.pto-generate-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 48px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1e3b2a 0%, #2d5a3e 100%);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 20px rgba(30, 59, 42, 0.25);
+}
+.pto-generate-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2d5a3e 0%, #3a7050 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(30, 59, 42, 0.35);
+}
+.pto-generate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .pto-overlay {
+    padding: 0;
+  }
+
+  .pto-modal {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+    height: 100vh;
+  }
+
+  .pto-body {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 16px 20px;
+  }
+
+  .pto-section--person {
+    padding-right: 0;
+  }
+
+  .pto-section--garment {
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid #eae6de;
+    border-bottom: 1px solid #eae6de;
+    padding: 16px 0;
+    min-width: unset;
+  }
+
+  .pto-section--garment .pto-garment-card {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .pto-section--garment .pto-garment-img {
+    width: 64px;
+    height: 80px;
+    aspect-ratio: unset;
+  }
+
+  .pto-section--result {
+    padding-left: 0;
+  }
+
+  .pto-capture-area {
+    min-height: 240px;
+  }
+
+  .pto-result-area {
+    min-height: 240px;
+  }
+
+  .pto-title {
+    font-size: 18px;
+  }
+
+  .pto-header {
+    padding: 16px 20px;
+  }
+
+  .pto-footer {
+    padding: 12px 20px 16px;
+  }
+
+  .pto-generate-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px;
+  }
+}

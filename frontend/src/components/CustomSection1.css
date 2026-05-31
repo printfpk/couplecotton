@@ -74,6 +74,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: 80% center;
   transition: transform 0.45s ease;
 }
 
@@ -173,7 +174,27 @@
 }
 
 @media (max-width: 900px) {
+  .cs1__grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 1rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 1rem;
+  }
+  .cs1__grid::-webkit-scrollbar {
+    display: none;
+  }
   .cs1__card {
-    aspect-ratio: 1.1;
+    flex: 0 0 65%;
+    scroll-snap-align: start;
+    aspect-ratio: 0.9;
+  }
+}
+
+@media (max-width: 479px) {
+  .cs1__card {
+    flex: 0 0 85%;
   }
 }

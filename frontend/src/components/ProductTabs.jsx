@@ -1,103 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 import './ProductTabs.css';
-
-const CDN = '/assets';
-
-/* ── Product data ─────────────────────────────────────────────── */
-const BEST_SELLERS = [
-  {
-    name: 'Skin Synbiotic',
-    type: 'Vitamin',
-    badge: 'Sale',
-    href: '/products/skin-synbiotic',
-    img1: `${CDN}/DailySkinSynbiotic1.webp`,
-    img2: `${CDN}/DailySkinSynbiotic2.webp`,
-    price: '$50.00',
-    compareAt: '$110.00',
-  },
-  {
-    name: 'Enduro Fuel',
-    type: 'Vitamin',
-    badge: null,
-    href: '/products/enduro-fuel',
-    img1: `${CDN}/WellinaEnduroFuel1597881502.webp`,
-    img2: `${CDN}/WellinaEnduroFuel1597881503.webp`,
-    price: '$54.00',
-    compareAt: null,
-  },
-  {
-    name: 'Pure Balance',
-    type: 'Vitamin',
-    badge: 'Best Sellers',
-    href: '/products/pure-balance',
-    img1: `${CDN}/WellinaPureBalance1597881490.webp`,
-    img2: `${CDN}/WellinaPureBalance1597881491.webp`,
-    price: '$48.00',
-    compareAt: null,
-  },
-  {
-    name: 'Omega Complex',
-    type: 'Vitamin',
-    badge: null,
-    href: '/products/omega-complex',
-    img1: `${CDN}/DailyOmegaComplex1597881476.webp`,
-    img2: `${CDN}/DailyOmegaComplex1597881477.webp`,
-    price: '$49.00',
-    compareAt: null,
-  },
-];
-
-const NEW_ARRIVALS = [
-  {
-    name: 'Detox Support',
-    type: 'Vitamin',
-    badge: 'New',
-    href: '/products/detox-support',
-    img1: `${CDN}/DailyDetoxSupport1597881463.webp`,
-    img2: `${CDN}/DailyDetoxSupport1597881464.webp`,
-    price: '$52.00',
-    compareAt: null,
-  },
-  {
-    name: 'Metabolism Boost',
-    type: 'Vitamin',
-    badge: 'New',
-    href: '/products/metabolism-boost',
-    img1: `${CDN}/DailyMetabolismBoost1597881470.webp`,
-    img2: `${CDN}/DailyMetabolismBoost1597881471.webp`,
-    price: '$56.00',
-    compareAt: null,
-  },
-  {
-    name: 'Vitality Softgels',
-    type: 'Vitamin',
-    badge: null,
-    href: '/products/vitality-softgels',
-    img1: `${CDN}/DailyVitalitySoftgels1597881482.webp`,
-    img2: `${CDN}/DailyVitalitySoftgels1597881482.webp`,
-    price: '$47.00',
-    compareAt: null,
-  },
-  {
-    name: 'Plant Protein',
-    type: 'Vitamin',
-    badge: 'New',
-    href: '/products/plant-protein',
-    img1: `${CDN}/WellinaPlantProtein1597881526.webp`,
-    img2: `${CDN}/WellinaPlantProtein1597881527.webp`,
-    price: '$58.00',
-    compareAt: null,
-  },
-];
-
-const TABS = [
-  { key: 'best', label: 'Best Sellers', products: BEST_SELLERS },
-  { key: 'new',  label: 'New Arrivals', products: NEW_ARRIVALS },
-];
-
-
 
 /* ── Animation variants ──────────────────────────────────────── */
 const gridVariants = {
@@ -123,8 +28,11 @@ const CartIcon = () => (
 /* ── Individual product card ──────────────────────────────────── */
 const ProductCard = ({ product }) => {
   const [hovered, setHovered] = useState(false);
-  const { name, type, badge, href, img1, img2, price, compareAt } = product;
-  const onSale = Boolean(compareAt);
+  const { addToCart } = useCart();
+  const imgUrl = (i) => product.images?.[i]?.url || product.images?.[i] || '';
+  const finalPrice = product.price?.finalPrice ?? product.price?.amount ?? 0;
+  const originalPrice = product.price?.discountPercentage > 0 ? product.price?.amount : null;
+  const badge = product.business?.isTrending ? 'Trending' : product.business?.isFeatured ? 'Featured' : null;
 
   return (
     <motion.div
@@ -135,18 +43,16 @@ const ProductCard = ({ product }) => {
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
     >
       {badge && (
-        <span
-          className={`ptabs__badge ptabs__badge--${badge.toLowerCase().replace(/\s+/g, '-')}`}
-        >
+        <span className={`ptabs__badge ptabs__badge--${badge.toLowerCase()}`}>
           {badge}
         </span>
       )}
 
-      <Link to={href} className="ptabs__card-img-link" tabIndex="-1" aria-hidden="true">
+      <Link to={`/products/${product.slug}`} className="ptabs__card-img-link" tabIndex="-1" aria-hidden="true">
         <div className="ptabs__card-media">
           <img
-            src={hovered && img2 ? img2 : img1}
-            alt={name}
+            src={hovered && imgUrl(1) ? imgUrl(1) : imgUrl(0)}
+            alt={product.title}
             className="ptabs__card-img"
             loading="lazy"
           />
@@ -154,25 +60,63 @@ const ProductCard = ({ product }) => {
       </Link>
 
       <div className="ptabs__card-info">
-        <span className="ptabs__card-type">{type}</span>
-        <Link to={href} className="ptabs__card-name">{name}</Link>
+        <span className="ptabs__card-type">{product.category}</span>
+        <Link to={`/products/${product.slug}`} className="ptabs__card-name">{product.title}</Link>
         <div className="ptabs__card-price">
-          <span className={`ptabs__price${onSale ? ' ptabs__price--sale' : ''}`}>{price}</span>
-          {compareAt && <span className="ptabs__price ptabs__price--compare">{compareAt}</span>}
+          <span className={`ptabs__price${originalPrice ? ' ptabs__price--sale' : ''}`}>₹{finalPrice.toFixed(2)}</span>
+          {originalPrice && <span className="ptabs__price ptabs__price--compare">₹{originalPrice.toFixed(2)}</span>}
         </div>
       </div>
 
-      <Link to={href} className="ptabs__quick-add" aria-label={`Add ${name} to cart`}>
+      <button className="ptabs__quick-add" aria-label={`Add ${product.title} to cart`} onClick={(e) => {
+        e.preventDefault();
+        const sizes = product.business?.sizes || [];
+        const defaultSize = sizes.includes('M') ? 'M' : sizes[0] || null;
+        addToCart(product, 1, defaultSize, product.fashion?.color ? { name: product.fashion.color } : null);
+      }}>
         <CartIcon />
-      </Link>
+      </button>
     </motion.div>
   );
 };
 
 /* ── Main ProductTabs component ──────────────────────────────── */
 const ProductTabs = () => {
-  const [activeTab, setActiveTab] = useState('best');
+  const [activeTab, setActiveTab] = useState('featured');
+  const [featured, setFeatured] = useState([]);
+  const [trending, setTrending] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/products?limit=8');
+        const data = await res.json();
+        const all = data.data || [];
+        setFeatured(all.filter(p => p.business?.isFeatured).slice(0, 4));
+        setTrending(all.filter(p => p.business?.isTrending).slice(0, 4));
+        // If not enough featured/trending, fill with whatever we have
+        if (featured.length === 0 && trending.length === 0) {
+          setFeatured(all.slice(0, 4));
+          setTrending(all.slice(4, 8));
+        }
+      } catch (err) {
+        console.error('Failed to fetch products:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  const TABS = [
+    { key: 'featured', label: 'Featured', products: featured },
+    { key: 'trending', label: 'Trending', products: trending },
+  ];
+
   const tab = TABS.find(t => t.key === activeTab);
+
+  if (loading) return null;
 
   return (
     <motion.section
@@ -185,7 +129,7 @@ const ProductTabs = () => {
       <div className="ptabs__container">
         {/* Header row */}
         <div className="ptabs__header">
-          <h2 className="ptabs__heading">Find your supplement</h2>
+          <h2 className="ptabs__heading">Our Collection</h2>
           <div className="ptabs__tab-nav" role="tablist">
             {TABS.map(t => (
               <button
@@ -213,16 +157,19 @@ const ProductTabs = () => {
             exit="exit"
           >
             {tab.products.map(p => (
-              <ProductCard key={p.name} product={p} />
+              <ProductCard key={p._id || p.slug} product={p} />
             ))}
+            {tab.products.length === 0 && (
+              <p style={{ textAlign: 'center', padding: '40px 0', color: '#888', gridColumn: '1 / -1' }}>No products yet</p>
+            )}
           </motion.div>
         </AnimatePresence>
 
         {/* View all CTA */}
         <div className="ptabs__footer">
-          <a href="/collections/all" onClick={stop} className="ptabs__view-all">
+          <Link to="/collections/all" className="ptabs__view-all">
             View all products →
-          </a>
+          </Link>
         </div>
       </div>
     </motion.section>

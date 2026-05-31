@@ -7,6 +7,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     allowedHosts: true, // Allow localtunnel hosts
+    host: true, // Listen on all local IPs
+    hmr: {
+      clientPort: 5173,
+    },
   },
   resolve: {
     alias: {

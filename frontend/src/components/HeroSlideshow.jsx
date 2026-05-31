@@ -4,22 +4,22 @@ import './HeroSlideshow.css';
 
 const SLIDES = [
   {
-    imgD: '/assets/hero-slide-1.webp',
-    imgM: '/assets/hero-slide-1-m.webp',
+    imgD: 'https://ik.imagekit.io/printf/couplecotton/couplecotton01.png',
+    imgM: 'https://ik.imagekit.io/printf/couplecotton/cotton01mob%20-%20Copy.png',
     tag:  'New Collection',
     headline: <>Style that matches<br /><em>your story.</em></>,
     href: '/collections/couple-sets',
   },
   {
-    imgD: '/assets/hero-slide-2.webp',
-    imgM: '/assets/hero-slide-2-m.webp',
+    imgD: 'https://ik.imagekit.io/printf/couplecotton/couplecotton02.png',
+    imgM: 'https://ik.imagekit.io/printf/couplecotton/ChatGPT%20Image%20May%2031,%202026,%2001_28_38%20AM.png',
     tag:  'Couple Essentials',
     headline: <>Together in <br /><em>every thread.</em></>,
     href: '/collections/matching-tees',
   },
   {
-    imgD: '/assets/hero-slide-3.webp',
-    imgM: '/assets/hero-slide-3-m.webp',
+    imgD: 'https://ik.imagekit.io/printf/couplecotton/couplecotton03.png',
+    imgM: 'https://ik.imagekit.io/printf/couplecotton/ChatGPT%20Image%20May%2031,%202026,%2001_30_47%20AM.png',
     tag:  'Premium Cotton',
     headline: <>Dress alike, <br />feel <em>closer.</em></>,
     href: '/collections/all',

@@ -137,3 +137,147 @@
 }
 
 .cdrawer__shop-btn:hover { background: #2d5a3f; }
+
+/* Cart items */
+.cdrawer__items {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.cdrawer__item {
+  display: flex;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.cdrawer__item-img-link {
+  width: 90px;
+  height: 110px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.cdrawer__item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cdrawer__item-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cdrawer__item-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a2e1a;
+  text-decoration: none;
+  margin-bottom: 0.25rem;
+}
+
+.cdrawer__item-variant {
+  font-size: 0.8rem;
+  color: #6b7a6b;
+  margin-bottom: 0.1rem;
+}
+
+.cdrawer__item-price-wrap {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.cdrawer__item-price {
+  font-weight: 600;
+  color: #1a2e1a;
+}
+
+.cdrawer__item-price-compare {
+  font-size: 0.8rem;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.cdrawer__item-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.cdrawer__qty {
+  display: flex;
+  align-items: center;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.cdrawer__qty-btn {
+  background: none;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  color: #1a2e1a;
+}
+
+.cdrawer__qty-val {
+  font-size: 0.9rem;
+  min-width: 20px;
+  text-align: center;
+}
+
+.cdrawer__remove {
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+  color: #6b7a6b;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Footer */
+.cdrawer__footer {
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.cdrawer__subtotal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a2e1a;
+  margin-bottom: 0.5rem;
+}
+
+.cdrawer__tax-note {
+  font-size: 0.8rem;
+  color: #6b7a6b;
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+
+.cdrawer__checkout-btn {
+  width: 100%;
+  padding: 1rem;
+  background: #1e3b2a;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cdrawer__checkout-btn:hover {
+  background: #2d5a3f;
+}

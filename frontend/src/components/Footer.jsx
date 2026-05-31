@@ -98,62 +98,43 @@ const Footer = () => (
     <div className="footer__top">
       <div className="footer__top-inner">
         <div className="footer__brand">
-          <h2 className="footer__brand-title">CoupleCotton</h2>
-          <p className="footer__tagline">Made for couples,<br />crafted with love.</p>
+          <h2 className="footer__brand-logo">CoupleCotton</h2>
+          <p className="footer__brand-title">We're obsessed with building the best.</p>
         </div>
 
-        <AccordionSection title="Company">
-          <ul className="footer__links-list">
-            {COMPANY_LINKS.map(({ label, href }) => (
-              <li key={label}><a href={href} onClick={stop}>{label}</a></li>
-            ))}
-          </ul>
-        </AccordionSection>
-
-        <AccordionSection title="Get Help">
-          <ul className="footer__links-list">
-            {HELP_LINKS.map(({ label, href }) => (
-              <li key={label}><a href={href} onClick={stop}>{label}</a></li>
-            ))}
-          </ul>
-        </AccordionSection>
-
-        <AccordionSection title="Information">
-          <address className="footer__address">
-            <p>3772 Village View Drive, Immokalee, Florida</p>
-            <p><a href="mailto:hello@couplecotton.com">hello@couplecotton.com</a></p>
-            <p>+1 888-234-1234 (toll-free)</p>
-          </address>
-        </AccordionSection>
-      </div>
-
-      <hr className="footer__divider" />
-
-      <div className="footer__ig-row">
-        <div className="footer__ig-header">
-          <div className="footer__ig-label">
+        <div className="footer__ig-row">
+          <div className="footer__ig-header">
             <p className="footer__ig-title">Follow Us on Instagram</p>
+            <a className="footer__ig-handle" href="https://instagram.com/couplecotton" rel="noopener noreferrer">
+              @couplecotton
+            </a>
           </div>
-          <a className="footer__ig-handle" href="https://instagram.com/couplecotton" rel="noopener noreferrer">
-            @couplecotton
-          </a>
         </div>
-        <div className="footer__ig-grid">
-          {IG_IMAGES.map((src, i) => (
-            <motion.a
-              key={i}
-              href="https://instagram.com/couplecoton"
-              className="footer__ig-item"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.07 }}
-              whileHover={{ scale: 1.06 }}
-            >
-              <img src={src} alt="Instagram" loading="lazy" />
-            </motion.a>
-          ))}
+
+        <div className="footer__accordions">
+          <AccordionSection title="Company">
+            <ul className="footer__links-list">
+              {COMPANY_LINKS.map(({ label, href }) => (
+                <li key={label}><a href={href} onClick={stop} className="flip-link" data-text={label}><span>{label}</span></a></li>
+              ))}
+            </ul>
+          </AccordionSection>
+
+          <AccordionSection title="Get Help">
+            <ul className="footer__links-list">
+              {HELP_LINKS.map(({ label, href }) => (
+                <li key={label}><a href={href} onClick={stop} className="flip-link" data-text={label}><span>{label}</span></a></li>
+              ))}
+            </ul>
+          </AccordionSection>
+
+          <AccordionSection title="Information">
+            <address className="footer__address">
+              <p>3772 Village View Drive, Immokalee, Florida</p>
+              <p><a href="mailto:hello@couplecotton.com" className="flip-link" data-text="hello@couplecotton.com"><span>hello@couplecotton.com</span></a></p>
+              <p>+1 888-234-1234 (toll-free)</p>
+            </address>
+          </AccordionSection>
         </div>
       </div>
     </div>
@@ -188,6 +169,24 @@ const Footer = () => (
             <li key={label}><a href={href} onClick={stop}>{label}</a></li>
           ))}
         </ul>
+
+        <div className="footer__payments-row">
+          <button className="footer__currency-dropdown">
+            <span role="img" aria-label="US Flag">🇺🇸</span> USD/ EN
+            <svg viewBox="0 0 20 20" fill="none" width="16" height="16">
+              <path d="M16.25 7.5L10 13.75L3.75 7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          
+          <div className="footer__payment-icons">
+            <img src="https://cdn.shopify.com/shopifycloud/shopify/assets/payment_icons/visa-319d545c6fd255c9aad5eeaad21fd6f7f7b4f5931cb5ea8ce5e74c106b048596.svg" alt="Visa" />
+            <img src="https://cdn.shopify.com/shopifycloud/shopify/assets/payment_icons/master-173035bc8124581983d4efa50cf8626e8553c2b311353fbf67485f9c1a2b88d1.svg" alt="Mastercard" />
+            <img src="https://cdn.shopify.com/shopifycloud/shopify/assets/payment_icons/american_express-2264c9b8b57b23b0b0831827e90cd7bcda2836adc42a912ebedf545dead35b20.svg" alt="Amex" />
+            <img src="https://cdn.shopify.com/shopifycloud/shopify/assets/payment_icons/paypal-49e4c1e03244b6d2de0d270ca0d22dd15da6e92cc7266e93eb43762df5aa355d.svg" alt="PayPal" />
+            <img src="https://cdn.shopify.com/shopifycloud/shopify/assets/payment_icons/diners_club-16436b9fb6dd9060edb51f1c7c44e23941e544ad798282d6aef1604319562fba.svg" alt="Diners" />
+            <img src="https://cdn.shopify.com/shopifycloud/shopify/assets/payment_icons/discover-cc9808e50193c7496e7a5245eb86d5e06f02e2476c0ea7abb480dd7e502ee26a.svg" alt="Discover" />
+          </div>
+        </div>
 
         <p className="footer__copy">© {new Date().getFullYear()} CoupleCotton</p>
       </div>
