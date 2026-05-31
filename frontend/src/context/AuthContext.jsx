@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('couplecotton_user');
     localStorage.removeItem('couplecotton_token');
     // Also hit the backend logout endpoint if needed, but for now clear local state
-    fetch('http://localhost:5000/api/auth/logout').catch(console.error);
+    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/logout`).catch(console.error);
   };
 
   return (

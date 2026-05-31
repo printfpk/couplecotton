@@ -11,7 +11,7 @@ const ProductList = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/products', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/products`, {
         headers: {
           'Authorization': `Bearer ${token}`
         },
@@ -40,7 +40,7 @@ const ProductList = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to permanently delete this product?')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/admin/products/${id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/products/${id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`

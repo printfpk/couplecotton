@@ -143,13 +143,13 @@ const ProductPage = () => {
     const fetchProduct = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5000/api/products/slug/${slug}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/products/slug/${slug}`);
         const data = await res.json();
         if (res.ok && data.data) {
           setProduct(data.data);
           // Fetch couple recommendations
           try {
-            const recRes = await fetch(`http://localhost:5000/api/products/${data.data._id}/recommend?limit=10`);
+            const recRes = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/products/${data.data._id}/recommend?limit=10`);
             const recData = await recRes.json();
             if (recRes.ok && recData.recommendations) {
               // API returns { sourceProduct, recommendations: [{ product, score, reasons }] }

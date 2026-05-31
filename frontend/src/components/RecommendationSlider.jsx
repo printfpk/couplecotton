@@ -41,7 +41,7 @@ const RecommendationSlider = ({ productId }) => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`http://localhost:5000/api/products/${productId}/recommend?limit=8`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/products/${productId}/recommend?limit=8`);
         const data = await res.json();
         if (res.ok && data.recommendations) {
           setRecommendations(data.recommendations);

@@ -112,7 +112,7 @@ const ProfilePage = () => {
   useEffect(() => {
     if (!user || activeSection !== 'addresses') return;
     setLoadingAddresses(true);
-    fetch('http://localhost:5000/api/auth/users/me/addresses', {
+    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/users/me/addresses`, {
       headers: {
         'Authorization': `Bearer ${token}`
       },
@@ -157,7 +157,7 @@ const ProfilePage = () => {
     e.preventDefault();
     setSavingAddress(true);
     try {
-      const res = await fetch('http://localhost:5000/api/auth/users/me/addresses', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/users/me/addresses`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -181,7 +181,7 @@ const ProfilePage = () => {
 
   const handleDeleteAddress = async (addressId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/users/me/addresses/${addressId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/users/me/addresses/${addressId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

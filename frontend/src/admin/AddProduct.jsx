@@ -11,7 +11,7 @@ const AddProduct = () => {
   const handleSubmit = async (formData) => {
     setIsSubmitting(true);
     try {
-      const res = await fetch('http://localhost:5000/api/admin/products', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/admin/products`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

@@ -84,7 +84,7 @@ const AuthModal = ({ open, onClose }) => {
           };
 
       // We'll use relative path, assuming proxy is configured in vite, or absolute localhost:5000
-      const url = `http://localhost:5000${endpoint}`;
+      const url = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${endpoint}`;
 
       const res = await fetch(url, {
         method: 'POST',

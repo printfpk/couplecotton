@@ -90,7 +90,7 @@ const ProductTabs = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/products?limit=8');
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/products?limit=8`);
         const data = await res.json();
         const all = data.data || [];
         setFeatured(all.filter(p => p.business?.isFeatured).slice(0, 4));
